@@ -5,6 +5,8 @@ public class Subject {
     String name;
     String year;
 
+    public Subject(){
+    }
     public Subject(String name, String year) {
         this.name = name;
         this.year = year;

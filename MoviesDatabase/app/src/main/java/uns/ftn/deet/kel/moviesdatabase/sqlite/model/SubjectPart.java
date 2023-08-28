@@ -5,7 +5,8 @@ public class SubjectPart {
     String name;
     int minPoints;
     int maxPoints;
-
+    public SubjectPart(){
+    }
     public SubjectPart(String name, int minPoints, int maxPoints) {
         this.name = name;
         this.minPoints = minPoints;

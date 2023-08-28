@@ -6,15 +6,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import uns.ftn.deet.kel.moviesdatabase.MainActivity;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Actor;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Director;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Movie;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Admin;
-
+import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Student;
+import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Subject;
 public class DatabaseHelper extends SQLiteOpenHelper {
     SQLiteDatabase db;
 
@@ -84,15 +87,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             KEY_INDEX + " TEXT," +
             KEY_JMBG + " TEXT," +
             KEY_USERNAME + " TEXT," +
-            KEY_PASSWORD + " TEXT," +
-            KEY_SUBJECT_ID + " INTEGER" +")";
+            KEY_PASSWORD + " TEXT" +")";
     // Subjects table create statement
     private static final String CREATE_TABLE_SUBJECTS= "CREATE TABLE IF NOT EXISTS "
             + TABLE_SUBJECTS +
             "(" + KEY_ID + " INTEGER PRIMARY KEY," +
             KEY_NAME  + " TEXT," +
-            KEY_YEAR + " TEXT," +
-            KEY_SUBJECT_ID + " INTEGER" + ")";
+            KEY_YEAR + " TEXT" + ")";
     // Admins table create statement
     private static final String CREATE_TABLE_ADMINS= "CREATE TABLE IF NOT EXISTS "
             + TABLE_ADMINS +
@@ -118,6 +119,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             KEY_STUDENT_ID  + " INTEGER," +
             KEY_PART_ID  + " INTEGER," +
             KEY_OBTAINED_POINTS  + " INTEGER" +")";
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Actors table create statement
     private static final String CREATE_TABLE_ACTORS = "CREATE TABLE IF NOT EXISTS "
             + TABLE_ACTORS + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME
@@ -139,7 +141,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + TABLE_MOVIE_ACTORS + "(" + KEY_ID + " INTEGER PRIMARY KEY,"
             + KEY_MOVIE_ID + " INTEGER,"
             + KEY_ACTOR_ID + " INTEGER" + ")";
-
+/******************************************************************************************************************/
     @Override
     public void onCreate(SQLiteDatabase db) {
         // creating required tables
@@ -225,6 +227,75 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return admin_id;
     }
+    public boolean findAdmin(String un, String pass) {
+        boolean admin_found = false;
+
+        ArrayList<Admin> admins = new ArrayList<Admin>();
+        String selectQuery = "SELECT  * FROM " + TABLE_ADMINS;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+        String inputUserName;
+        String inputPassword;
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Admin a = new Admin();
+                inputUserName = (c.getString(c.getColumnIndex(KEY_USERNAME)));
+                Log.i("MyTag", "username ="+ inputUserName);
+                inputPassword = (c.getString(c.getColumnIndex(KEY_PASSWORD)));
+                Log.i("MyTag", "password ="+ inputPassword);
+                if(inputUserName == un && inputPassword == pass){
+                    admin_found = true;
+                    break;
+                }
+            } while (c.moveToNext());
+        }
+
+        return admin_found;
+    }
+    /*
+     * Creating a student
+     */
+    public long createStudent(Student student) {
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, student.getName());//kljuc mora da se slaze sa nazivom kolone
+        values.put(KEY_LAST_NAME, student.getLastName());
+        values.put(KEY_LAST_NAME, student.getLastName());
+        values.put(KEY_INDEX, student.getIndex());
+        values.put(KEY_JMBG, student.getJmbg());
+        values.put(KEY_USERNAME, student.getUserName());
+        values.put(KEY_PASSWORD, student.getPassword());
+        // insert row
+        long student_id = db.insert(TABLE_STUDENTS, null, values);
+
+        //now we know id obtained after writing actor to a database, update existing actor
+        student.setId(student_id);
+
+        return student_id;
+    }
+
+    public long createSubject(Subject subject) {
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, subject.getName());//kljuc mora da se slaze sa nazivom kolone
+        values.put(KEY_YEAR, subject.getYear());
+        // insert row
+        long subject_id = db.insert(TABLE_SUBJECTS, null, values);
+
+        //now we know id obtained after writing actor to a database, update existing actor
+        subject.setId(subject_id);
+
+        return subject_id;
+    }
+
+//    private static final String CREATE_TABLE_SUBJECTS= "CREATE TABLE IF NOT EXISTS "
+//            + TABLE_SUBJECTS +
+//            "(" + KEY_ID + " INTEGER PRIMARY KEY," +
+//            KEY_NAME  + " TEXT," +
+//            KEY_YEAR + " TEXT," + ")";
     /*
      * Creating an actor
      */

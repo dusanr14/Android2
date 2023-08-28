@@ -1,11 +1,12 @@
 package uns.ftn.deet.kel.moviesdatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.widget.Toast;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -15,7 +16,9 @@ import uns.ftn.deet.kel.moviesdatabase.sqlite.helper.DatabaseHelper;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Actor;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Director;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Movie;
-
+import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Admin;
+import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Student;
+import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Subject;
 public class MainActivity extends AppCompatActivity {
     // Database Helper
     DatabaseHelper databaseHelper;
@@ -26,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     Button btnFindActors;
     Button btnRestoreDatabase;
 
+    EditText txtUserName;
+    EditText txtPassword;
+    Button btnLogIn;
     @Override
     protected void onStop() {
         super.onStop();
@@ -44,6 +50,24 @@ public class MainActivity extends AppCompatActivity {
         spnMovies = (Spinner) findViewById(R.id.spnMovies);
 
         btnDeleteDatabase = (Button) findViewById(R.id.btnDeleteDatabase);
+
+        txtUserName = (EditText) findViewById(R.id.txtUserName);
+        txtPassword = (EditText) findViewById(R.id.txtPassword);
+
+        btnLogIn = (Button) findViewById(R.id.btnLogIn);
+
+        btnLogIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(databaseHelper.findAdmin(txtUserName.getText().toString(),txtPassword.getText().toString())){
+                    //Toast.makeText(MainActivity.this, "Uspesno logovanje", Toast.LENGTH_SHORT).show();
+                } else {
+                    //Toast.makeText(MainActivity.this, "Neuspesno logovanje"+txtUserName.getText().toString()+txtPassword.getText().toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+        );
         btnDeleteDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,7 +79,9 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-        });
+        }
+
+        );
 
         btnFindActors = (Button) findViewById(R.id.btnActorsInMovie);
         btnFindActors.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +112,9 @@ public class MainActivity extends AppCompatActivity {
         databaseHelper.createTables();
 
         if (databaseHelper.getAllActors().size() == 0) {
+            Admin admin1 = new Admin("admin1", "admin2");
+
+            databaseHelper.createAdmin(admin1);
             Actor a1 = new Actor("Brad Pitt", "18-12-1963");
             Actor a2 = new Actor("Edward Norton", "18-08-1969");
             Actor a3 = new Actor("Samuel L. Jackson", "21-12-1948");
