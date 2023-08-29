@@ -125,6 +125,12 @@ public class MainActivity extends AppCompatActivity {
             databaseHelper.createAdmin(admin1);
             databaseHelper.createStudent(s1);
             databaseHelper.createStudent(s2);
+            Subject subject1 = new Subject("RSZEOS","2022/2023" );
+            databaseHelper.createSubject(subject1);
+            subject1.addStudent(s1);
+            subject1.addStudent(s2);
+            databaseHelper.addStudentsInSubject(subject1);
+            ////////////////////////////////////////////////////////////////////////////////////////////
             Actor a1 = new Actor("Brad Pitt", "18-12-1963");
             Actor a2 = new Actor("Edward Norton", "18-08-1969");
             Actor a3 = new Actor("Samuel L. Jackson", "21-12-1948");
@@ -205,7 +211,8 @@ public class MainActivity extends AppCompatActivity {
         // Creating adapter for spinner
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, actornames);
 
-        // Drop down layout style - list view with radio button
+        // Drop down layout
+        // style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         // attaching data adapter to spinner

@@ -362,8 +362,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //read all actors for a given movie and for each actor insert a row in a table movie_actors
         for (Student student : subject.getStudents()){
             ContentValues values = new ContentValues();
-            values.put(KEY_MOVIE_ID, student.getId());
-            values.put(KEY_ACTOR_ID, subject.getId());
+            values.put(KEY_STUDENT_ID, student.getId());
+            values.put(KEY_SUBJECT_ID, subject.getId());
             // insert row
             db.insert(TABLE_STUDENTS_SUBJECTS, null, values);
         }
@@ -505,7 +505,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT  st." + KEY_ID + ", sb." + KEY_NAME + " FROM " + TABLE_STUDENTS + " st, "
                 + TABLE_SUBJECTS + " sb, " + TABLE_STUDENTS_SUBJECTS + " sc " +
-                "WHERE UPPER(c." + KEY_NAME + ") " +
+                "WHERE UPPER(sb." + KEY_NAME + ") " +
                 "LIKE '" + subjectName.toUpperCase() + "%'" +
                 "AND sb." + KEY_ID + " = " + "sc." + KEY_SUBJECT_ID + " " +
                 "AND st." + KEY_ID + " = " + "sc." + KEY_STUDENT_ID;
@@ -525,6 +525,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return students;
+    }
+
+    //SELECT s.id, c.name FROM studen s, subjec c, stuce_subjec sc WHERE c.name LIKE ‘Razv%’ AND c.id = sc.subje_id AND s.id = sc.student_id
+
+    public ArrayList<Subject> getAllSubjectsOfStudent(String studentName) {
+        ArrayList<Subject> subjects = new ArrayList<Subject>();
+
+        String selectQuery = "SELECT  sb." + KEY_ID + ", st." + KEY_NAME + " FROM " + TABLE_SUBJECTS + " sb, "
+                + TABLE_STUDENTS + " st, " + TABLE_STUDENTS_SUBJECTS + " sc " +
+                "WHERE UPPER(st." + KEY_NAME + ") " +
+                "LIKE '" + studentName.toUpperCase() + "%'" +
+                "AND sb." + KEY_ID + " = " + "sc." + KEY_SUBJECT_ID + " " +
+                "AND st." + KEY_ID + " = " + "sc." + KEY_STUDENT_ID;
+
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                long subject_id = c.getInt(c.getColumnIndex(KEY_ID));
+                Subject s = getSubject(subject_id);
+                subjects.add(s);
+            } while (c.moveToNext());
+        }
+
+        return subjects;
     }
     /**********************************************************************************************/
     /*

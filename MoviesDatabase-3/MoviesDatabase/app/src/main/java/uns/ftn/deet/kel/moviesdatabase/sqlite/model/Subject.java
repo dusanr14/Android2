@@ -12,6 +12,16 @@ public class Subject {
     }
 
 
+    public Subject(String name, String year) {
+        this.name = name;
+        this.year = year;
+    }
+    public Subject(long id, String name, String year) {
+        this.id = id;
+        this.name = name;
+        this.year = year;
+    }
+
     public Subject(String name, String year, ArrayList<Student> students) {
         this.name = name;
         this.year = year;
