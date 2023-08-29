@@ -30,7 +30,15 @@ public class Student {
         this.userName = userName;
         this.password = password;
     }
-
+    public Student(Student st) {
+        this.id = st.id;
+        this.name = st.name;
+        this.lastName = st.lastName;
+        this.stud_index = st.stud_index;
+        this.jmbg = st.jmbg;
+        this.userName = st.userName;
+        this.password = st.password;
+    }
     public long getId() {
         return id;
     }

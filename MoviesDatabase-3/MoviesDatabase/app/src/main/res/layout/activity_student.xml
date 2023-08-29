@@ -1,24 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome to Student Activity"
-        android:textSize="20sp"
-        android:layout_centerInParent="true" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Click Me"
-        android:layout_below="@id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
+        <TextView
+            android:id="@+id/txtStudName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:layout_marginBottom="34dp"/>
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/txtStudLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Last Name"
+            android:layout_marginBottom="34dp"/>
+
+        <TextView
+            android:id="@+id/txtIndex"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Index"
+            android:layout_marginBottom="34dp"/>
+
+        <TextView
+            android:id="@+id/txtJmbg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="JMBG"
+            android:layout_marginBottom="34dp"/>/>
+
+        <Button
+            android:id="@+id/btnShow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="34dp"
+            android:text="Show" />/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

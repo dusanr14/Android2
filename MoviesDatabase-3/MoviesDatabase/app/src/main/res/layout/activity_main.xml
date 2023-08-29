@@ -11,6 +11,28 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <EditText
+            android:id="@+id/txtUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:text="alek" />
+
+        <EditText
+            android:id="@+id/txtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:text="goku123" />
+
+        <Button
+            android:id="@+id/btnLogIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Log In" />
+
         <Spinner
             android:id="@+id/spnActors"
             android:layout_width="match_parent"
@@ -52,27 +74,7 @@
             android:layout_gravity="center"
             android:text="Restore database" />
 
-        <EditText
-            android:id="@+id/txtUserName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text"
-            android:text="User Name" />
 
-        <EditText
-            android:id="@+id/txtPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text"
-            android:text="Password" />
-
-        <Button
-            android:id="@+id/btnLogIn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Log In" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

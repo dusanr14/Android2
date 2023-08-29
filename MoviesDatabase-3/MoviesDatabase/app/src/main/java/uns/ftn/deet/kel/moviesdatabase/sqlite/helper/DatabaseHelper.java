@@ -18,6 +18,8 @@ import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Movie;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Admin;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Student;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Subject;
+import uns.ftn.deet.kel.moviesdatabase.sqlite.model.SubjectPart;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
     SQLiteDatabase db;
 
@@ -269,7 +271,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (c.moveToFirst()) {
             do {
-                Admin a = new Admin();
                 inputUserName = (c.getString(c.getColumnIndex(KEY_USERNAME)));
                 Log.i("MyTag", "username ="+ inputUserName);
                 inputPassword = (c.getString(c.getColumnIndex(KEY_PASSWORD)));
@@ -281,6 +282,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } while (c.moveToNext());
         }
         return student_found;
+    }
+    public int getStudentIDWithUserName(String un) {
+        boolean student_found = false;
+        int tempID = 500;
+        ArrayList<Admin> students = new ArrayList<Admin>();
+        String selectQuery = "SELECT  * FROM " + TABLE_STUDENTS;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+        String inputUserName;
+        String inputPassword;
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                inputUserName = (c.getString(c.getColumnIndex(KEY_USERNAME)));
+                inputPassword = (c.getString(c.getColumnIndex(KEY_PASSWORD)));
+                if(inputUserName.equals(un)){
+                    tempID = c.getInt(c.getColumnIndex(KEY_ID));
+                    break;
+                }
+            } while (c.moveToNext());
+        }
+        return tempID;
     }
     /*
      * Creating a student
@@ -318,11 +343,190 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return subject_id;
     }
 
-//    private static final String CREATE_TABLE_SUBJECTS= "CREATE TABLE IF NOT EXISTS "
-//            + TABLE_SUBJECTS +
-//            "(" + KEY_ID + " INTEGER PRIMARY KEY," +
-//            KEY_NAME  + " TEXT," +
-//            KEY_YEAR + " TEXT," + ")";
+    public long createPart(SubjectPart part) {
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, part.getName());//kljuc mora da se slaze sa nazivom kolone
+        values.put(KEY_MIN_POINTS, part.getMinPoints());
+        values.put(KEY_MAX_POINTS, part.getMaxPoints());
+        // insert row
+        long subject_id = db.insert(TABLE_PARTS, null, values);
+
+        //now we know id obtained after writing actor to a database, update existing actor
+        part.setId(subject_id);
+
+        return subject_id;
+    }
+
+    public void addStudentsInSubject(Subject subject) {
+        //read all actors for a given movie and for each actor insert a row in a table movie_actors
+        for (Student student : subject.getStudents()){
+            ContentValues values = new ContentValues();
+            values.put(KEY_MOVIE_ID, student.getId());
+            values.put(KEY_ACTOR_ID, subject.getId());
+            // insert row
+            db.insert(TABLE_STUDENTS_SUBJECTS, null, values);
+        }
+    }
+
+    public Student getStudent(long student_id) {
+
+        String selectQuery = "SELECT  * FROM " + TABLE_STUDENTS + " WHERE "
+                + KEY_ID + " = " + student_id;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        //create student based on data read from a database
+        Student st = new Student();
+        st.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+        st.setName((c.getString(c.getColumnIndex(KEY_NAME))));
+        st.setLastName((c.getString(c.getColumnIndex(KEY_LAST_NAME))));
+        st.setIndex(c.getString(c.getColumnIndex(KEY_INDEX)));
+        st.setJmbg(c.getString(c.getColumnIndex(KEY_JMBG)));
+        st.setUserName(c.getString(c.getColumnIndex(KEY_USERNAME)));
+        st.setPassword(c.getString(c.getColumnIndex(KEY_PASSWORD)));
+        return st;
+    }
+    /*
+     * Updating an Actor using data in an object actor
+     */
+    public int updateStudent(Student student) {
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, student.getName());
+        values.put(KEY_LAST_NAME, student.getLastName());
+        values.put(KEY_INDEX, student.getIndex());
+        values.put(KEY_JMBG, student.getJmbg());
+        values.put(KEY_USERNAME, student.getUserName());
+        values.put(KEY_PASSWORD, student.getPassword());
+        // updating row
+        return db.update(TABLE_STUDENTS, values, KEY_ID + " = ?",
+                new String[] { String.valueOf(student.getId()) });
+    }
+
+    /*
+     * Deleting an Student using actor id
+     */
+    public void deleteStudent(long student_id) {
+
+        db.delete(TABLE_STUDENTS, KEY_ID + " = ?",
+                new String[] { String.valueOf(student_id) });
+    }
+
+    public Subject getSubject(long subject_id) {
+
+        String selectQuery = "SELECT  * FROM " + TABLE_SUBJECTS + " WHERE "
+                + KEY_ID + " = " + subject_id;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        Subject subj = new Subject();
+        subj.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+        subj.setName((c.getString(c.getColumnIndex(KEY_NAME))));
+        subj.setYear(c.getString(c.getColumnIndex(KEY_YEAR)));
+
+        return subj;
+    }
+
+    /*
+     * getting all actors
+     * SELECT * FROM actors;
+     * */
+    public ArrayList<Student> getAllStudents() {
+        ArrayList<Student> students = new ArrayList<Student>();
+        String selectQuery = "SELECT  * FROM " + TABLE_STUDENTS;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Student st = new Student();
+                st.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+                st.setName((c.getString(c.getColumnIndex(KEY_NAME))));
+                st.setLastName((c.getString(c.getColumnIndex(KEY_LAST_NAME))));
+                st.setIndex(c.getString(c.getColumnIndex(KEY_INDEX)));
+                st.setJmbg(c.getString(c.getColumnIndex(KEY_JMBG)));
+                st.setUserName(c.getString(c.getColumnIndex(KEY_USERNAME)));
+                st.setPassword(c.getString(c.getColumnIndex(KEY_PASSWORD)));
+                // adding to todo list
+                students.add(st);
+            } while (c.moveToNext());
+        }
+
+        return students;
+    }
+    /*
+     * getting all actors
+     * SELECT * FROM actors;
+     * */
+    public ArrayList<Subject> getAllSubjects() {
+        ArrayList<Subject> subjects = new ArrayList<Subject>();
+        String selectQuery = "SELECT  * FROM " + TABLE_SUBJECTS;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Subject subj = new Subject();
+                subj.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+                subj.setName((c.getString(c.getColumnIndex(KEY_NAME))));
+                subj.setYear(c.getString(c.getColumnIndex(KEY_YEAR)));
+                // adding to todo list
+                subjects.add(subj);
+            } while (c.moveToNext());
+        }
+
+        return subjects;
+    }
+
+    /*
+     * getting all actors acting in a movie
+     * SELECT a.id, m.name FROM actors a, movies m, movie_actors ma WHERE m.name LIKE ‘Pulp%’ AND m.id = ma.movie_id AND a.id = ma.actor_id;
+     * SELECT s.id, c.name FROM studen s, subjec c, stuce_subjec sc WHERE c.name LIKE ‘Razv%’ AND c.id = sc.subje_id AND s.id = sc.student_id
+     * */
+    public List<Student> getAllStudentsInSubject(String subjectName) {
+        List<Student> students = new ArrayList<Student>();
+
+        String selectQuery = "SELECT  st." + KEY_ID + ", sb." + KEY_NAME + " FROM " + TABLE_STUDENTS + " st, "
+                + TABLE_SUBJECTS + " sb, " + TABLE_STUDENTS_SUBJECTS + " sc " +
+                "WHERE UPPER(c." + KEY_NAME + ") " +
+                "LIKE '" + subjectName.toUpperCase() + "%'" +
+                "AND sb." + KEY_ID + " = " + "sc." + KEY_SUBJECT_ID + " " +
+                "AND st." + KEY_ID + " = " + "sc." + KEY_STUDENT_ID;
+
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                long student_id = c.getInt(c.getColumnIndex(KEY_ID));
+                Student s = getStudent(student_id);
+                students.add(s);
+            } while (c.moveToNext());
+        }
+
+        return students;
+    }
+    /**********************************************************************************************/
     /*
      * Creating an actor
      */

@@ -23,7 +23,7 @@ import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Student;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Subject;
 public class MainActivity extends AppCompatActivity {
     // Database Helper
-    DatabaseHelper databaseHelper;
+    static DatabaseHelper databaseHelper;
     Spinner spnActors;
     Spinner spnDirectors;
     Spinner spnMovies;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        databaseHelper.closeDB();
+        //databaseHelper.closeDB();
 
     }
 
@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (databaseHelper.findStudent(txtUserName.getText().toString(),txtPassword.getText().toString())){
                     Toast.makeText(MainActivity.this, "Uspesno logovanje: Student", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, StudentActivity.class);
+                    intent.putExtra("key_username", txtUserName.getText().toString()); // Replace "key" with a meaningful identifier and "value" with the actual data you want to pass
                     startActivity(intent);
                 } else{
                         Toast.makeText(MainActivity.this, "Neuspesno logovanje "+txtUserName.getText().toString()+" "+txtPassword.getText().toString(), Toast.LENGTH_SHORT).show();
@@ -120,8 +121,10 @@ public class MainActivity extends AppCompatActivity {
         if (databaseHelper.getAllActors().size() == 0) {
             Admin admin1 = new Admin("admin", "admin");
             Student s1 = new Student("Aleksa", "Aleksic", "e1-2018","0101999800068","alek","goku123");
+            Student s2 = new Student("Petar", "Petrovic", "e1-2017","0102998810062","pero","asdf123");
             databaseHelper.createAdmin(admin1);
             databaseHelper.createStudent(s1);
+            databaseHelper.createStudent(s2);
             Actor a1 = new Actor("Brad Pitt", "18-12-1963");
             Actor a2 = new Actor("Edward Norton", "18-08-1969");
             Actor a3 = new Actor("Samuel L. Jackson", "21-12-1948");
