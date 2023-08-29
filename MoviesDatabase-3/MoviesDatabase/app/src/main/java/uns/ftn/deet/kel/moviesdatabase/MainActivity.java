@@ -1,6 +1,8 @@
 package uns.ftn.deet.kel.moviesdatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.widget.Toast;
 import android.os.Bundle;
 import android.view.View;
@@ -63,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Uspesno logovanje: Admin", Toast.LENGTH_SHORT).show();
                 } else if (databaseHelper.findStudent(txtUserName.getText().toString(),txtPassword.getText().toString())){
                     Toast.makeText(MainActivity.this, "Uspesno logovanje: Student", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, StudentActivity.class);
+                    startActivity(intent);
                 } else{
                         Toast.makeText(MainActivity.this, "Neuspesno logovanje "+txtUserName.getText().toString()+" "+txtPassword.getText().toString(), Toast.LENGTH_SHORT).show();
                 }
