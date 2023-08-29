@@ -60,9 +60,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(databaseHelper.findAdmin(txtUserName.getText().toString(),txtPassword.getText().toString())){
-                    Toast.makeText(MainActivity.this, "Uspesno logovanje", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Neuspesno logovanje "+txtUserName.getText().toString()+" "+txtPassword.getText().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Uspesno logovanje: Admin", Toast.LENGTH_SHORT).show();
+                } else if (databaseHelper.findStudent(txtUserName.getText().toString(),txtPassword.getText().toString())){
+                    Toast.makeText(MainActivity.this, "Uspesno logovanje: Student", Toast.LENGTH_SHORT).show();
+                } else{
+                        Toast.makeText(MainActivity.this, "Neuspesno logovanje "+txtUserName.getText().toString()+" "+txtPassword.getText().toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -113,8 +115,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (databaseHelper.getAllActors().size() == 0) {
             Admin admin1 = new Admin("admin", "admin");
-
+            Student s1 = new Student("Aleksa", "Aleksic", "e1-2018","0101999800068","alek","goku123");
             databaseHelper.createAdmin(admin1);
+            databaseHelper.createStudent(s1);
             Actor a1 = new Actor("Brad Pitt", "18-12-1963");
             Actor a2 = new Actor("Edward Norton", "18-08-1969");
             Actor a3 = new Actor("Samuel L. Jackson", "21-12-1948");

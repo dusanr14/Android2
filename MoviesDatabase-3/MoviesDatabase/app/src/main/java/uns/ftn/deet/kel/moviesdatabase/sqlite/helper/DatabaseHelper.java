@@ -252,8 +252,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
             } while (c.moveToNext());
         }
+    return admin_found;
+    }
 
-        return admin_found;
+    public boolean findStudent(String un, String pass) {
+        boolean student_found = false;
+
+        ArrayList<Admin> students = new ArrayList<Admin>();
+        String selectQuery = "SELECT  * FROM " + TABLE_STUDENTS;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+        String inputUserName;
+        String inputPassword;
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Admin a = new Admin();
+                inputUserName = (c.getString(c.getColumnIndex(KEY_USERNAME)));
+                Log.i("MyTag", "username ="+ inputUserName);
+                inputPassword = (c.getString(c.getColumnIndex(KEY_PASSWORD)));
+                Log.i("MyTag", "password ="+ inputPassword);
+                if(inputUserName.equals(un)  && inputPassword.equals(pass)){
+                    student_found = true;
+                    break;
+                }
+            } while (c.moveToNext());
+        }
+        return student_found;
     }
     /*
      * Creating a student
