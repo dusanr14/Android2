@@ -246,7 +246,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 Log.i("MyTag", "username ="+ inputUserName);
                 inputPassword = (c.getString(c.getColumnIndex(KEY_PASSWORD)));
                 Log.i("MyTag", "password ="+ inputPassword);
-                if(inputUserName == un && inputPassword == pass){
+                if(inputUserName.equals(un)  && inputPassword.equals(pass)){
                     admin_found = true;
                     break;
                 }

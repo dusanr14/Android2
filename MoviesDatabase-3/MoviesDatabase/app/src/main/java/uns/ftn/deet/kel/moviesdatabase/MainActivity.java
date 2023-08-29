@@ -60,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(databaseHelper.findAdmin(txtUserName.getText().toString(),txtPassword.getText().toString())){
-                    //Toast.makeText(MainActivity.this, "Uspesno logovanje", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Uspesno logovanje", Toast.LENGTH_SHORT).show();
                 } else {
-                    //Toast.makeText(MainActivity.this, "Neuspesno logovanje"+txtUserName.getText().toString()+txtPassword.getText().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Neuspesno logovanje "+txtUserName.getText().toString()+" "+txtPassword.getText().toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         databaseHelper.createTables();
 
         if (databaseHelper.getAllActors().size() == 0) {
-            Admin admin1 = new Admin("admin1", "admin2");
+            Admin admin1 = new Admin("admin", "admin");
 
             databaseHelper.createAdmin(admin1);
             Actor a1 = new Actor("Brad Pitt", "18-12-1963");
