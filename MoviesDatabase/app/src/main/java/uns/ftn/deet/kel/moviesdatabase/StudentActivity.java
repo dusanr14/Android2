@@ -30,11 +30,11 @@ public class StudentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student);
 
-        txtStudName = (TextView) findViewById(R.id.txtStudName);
-        txtStudLastName = (TextView) findViewById(R.id.txtStudLastName);
+        txtStudName = (TextView) findViewById(R.id.txtAdminUser);
+        txtStudLastName = (TextView) findViewById(R.id.txtAdminPass);
         txtIndex = (TextView) findViewById(R.id.txtIndex);
         txtJmbg = (TextView) findViewById(R.id.txtJmbg);
-        btnShow = (Button) findViewById(R.id.btnShow);
+        btnShow = (Button) findViewById(R.id.btnAddAdmin);
         spnSubjects = (Spinner) findViewById(R.id.spnSubjects);
         Intent receivedIntent = getIntent();
         String recUser = receivedIntent.getStringExtra("key_username"); // Replace "key" with the same key used to send the data

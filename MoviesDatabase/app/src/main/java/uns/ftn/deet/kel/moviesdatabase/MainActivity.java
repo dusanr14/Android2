@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(databaseHelper.findAdmin(txtUserName.getText().toString(),txtPassword.getText().toString())){
                     Toast.makeText(MainActivity.this, "Uspesno logovanje: Admin", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, AdminActivity.class);
+                    startActivity(intent);
                 } else if (databaseHelper.findStudent(txtUserName.getText().toString(),txtPassword.getText().toString())){
                     Toast.makeText(MainActivity.this, "Uspesno logovanje: Student", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, StudentActivity.class);

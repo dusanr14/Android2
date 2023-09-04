@@ -9,45 +9,31 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <EditText
             android:id="@+id/txtAdminUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Name"
-            android:layout_marginBottom="34dp"/>
+            android:layout_marginBottom="18dp"
+            android:text="Username" />
 
-        <TextView
+        <EditText
             android:id="@+id/txtAdminPass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Last Name"
-            android:layout_marginBottom="34dp"/>
-
-        <TextView
-            android:id="@+id/txtIndex"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Index"
-            android:layout_marginBottom="34dp"/>
-
-        <TextView
-            android:id="@+id/txtJmbg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="JMBG"
-            android:layout_marginBottom="34dp"/>/>
+            android:layout_marginBottom="18dp"
+            android:text="Password" />
 
         <Button
             android:id="@+id/btnAddAdmin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="34dp"
-            android:text="Show" />
+            android:layout_marginBottom="18dp"
+            android:text="Add admin" />
 
         <Spinner
             android:id="@+id/spnSubjects"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="34dp"/>/>
+            android:layout_marginBottom="18dp"/>/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
