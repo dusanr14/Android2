@@ -206,7 +206,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STUDENTS_SUBJECTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STUDENTS_PARTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ADMINS);
-        db.execSQL(CREATE_TABLE_STUDENTS_PARTS);
+
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTORS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DIRECTORS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MOVIES);

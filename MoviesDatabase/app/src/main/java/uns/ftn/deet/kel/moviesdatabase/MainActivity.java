@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Neuspesno logovanje "+txtUserName.getText().toString()+" "+txtPassword.getText().toString(), Toast.LENGTH_SHORT).show();
                 }
             }
+
         }
 
         );
@@ -111,9 +112,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        createTablesAndInitData();
-
     }
 
     void createTablesAndInitData(){
@@ -121,16 +119,18 @@ public class MainActivity extends AppCompatActivity {
 
         if (databaseHelper.getAllActors().size() == 0) {
             Admin admin1 = new Admin("admin", "admin");
-            Student s1 = new Student("Aleksa", "Aleksic", "e1-2018","0101999800068","alek","goku123");
-            Student s2 = new Student("Petar", "Petrovic", "e1-2017","0102998810062","pero","asdf123");
+            Student s1 = new Student("Aleksa", "Aleksic", "e1-2018", "0101999800068", "alek", "goku123");
+            Student s2 = new Student("Petar", "Petrovic", "e1-2017", "0102998810062", "pero", "asdf123");
             databaseHelper.createAdmin(admin1);
             databaseHelper.createStudent(s1);
             databaseHelper.createStudent(s2);
-//            Subject subject1 = new Subject("RSZEOS","2022/2023" );
-//            databaseHelper.createSubject(subject1);
-//            subject1.addStudent(s1);
-//            subject1.addStudent(s2);
-//            databaseHelper.addStudentsInSubject(subject1);
+            Subject subject1 = new Subject("RSZEOS", "2022/2023");
+            Subject subject2 = new Subject("MPS", "2021/2022");
+            databaseHelper.createSubject(subject1);
+            databaseHelper.createSubject(subject2);
+           subject1.addStudent(s1);
+           subject1.addStudent(s2);
+            databaseHelper.addStudentsInSubject(subject1);
             ////////////////////////////////////////////////////////////////////////////////////////////
             Actor a1 = new Actor("Brad Pitt", "18-12-1963");
             Actor a2 = new Actor("Edward Norton", "18-08-1969");
@@ -194,8 +194,8 @@ public class MainActivity extends AppCompatActivity {
             m7.addActor(a1);
             m7.addActor(a5);
             databaseHelper.addActorsInMovie(m7);
-        }
 
+        }
         List<Actor> la = databaseHelper.getAllActors();
         loadSpinnerDataActors((ArrayList<Actor>) la);
         List<Director> ld = databaseHelper.getAllDirectors();
