@@ -20,7 +20,7 @@ import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Student;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Subject;
 
 public class StudentActivity extends AppCompatActivity {
-    DatabaseHelper databaseHelper = MainActivity.databaseHelper;
+    //DatabaseHelper databaseHelper = MainActivity.databaseHelper;
     TextView txtStudName;
     TextView txtStudLastName;
     TextView txtIndex;
