@@ -6,14 +6,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import uns.ftn.deet.kel.moviesdatabase.MainActivity;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Actor;
-import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Admin;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Director;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Movie;
+import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Admin;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Student;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Subject;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.SubjectPart;
@@ -35,22 +37,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Table Names
+    /*************************************************************/  /***/
+    private static final String TABLE_ACTORS = "actors";             /***/
+    private static final String TABLE_DIRECTORS = "directors";       /***/
+    private static final String TABLE_MOVIES = "movies";             /***/
+    private static final String TABLE_MOVIE_ACTORS = "movie_actors"; /***/
+    /*************************************************************/  /***/
     private static final String TABLE_STUDENTS = "students";
     private static final String TABLE_ADMINS = "admins";
     private static final String TABLE_SUBJECTS = "subjects";
     private static final String TABLE_PARTS = "parts";
     private static final String TABLE_STUDENTS_SUBJECTS = "students_subjects";
     private static final String TABLE_STUDENTS_PARTS = "students_parts";
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    private static final String TABLE_ACTORS = "actors";
-    private static final String TABLE_DIRECTORS = "directors";
-    private static final String TABLE_MOVIES = "movies";
-    private static final String TABLE_MOVIE_ACTORS = "movie_actors";
-
     // Common column names
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_BIRTHDATE = "birth_date";
+
     private static final String KEY_USERNAME = "username";
     private static final String KEY_PASSWORD = "password";
     // STUDENTS Table
@@ -68,7 +71,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_STUDENT_ID = "student_id";
     private static final String KEY_PART_ID = "part_id";
     private static final String KEY_SUBJECT_ID = "subject_id";
-    ///////////////////////////////////////////////////////////////////////////////////////////////
     // MOVIES Table - column names
     private static final String KEY_DIRECTOR_ID = "director_id";
     private static final String KEY_RELEASEDATE = "release_date";
@@ -119,7 +121,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             KEY_STUDENT_ID  + " INTEGER," +
             KEY_PART_ID  + " INTEGER," +
             KEY_OBTAINED_POINTS  + " INTEGER" +")";
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Actors table create statement
     private static final String CREATE_TABLE_ACTORS = "CREATE TABLE IF NOT EXISTS "
             + TABLE_ACTORS + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME
@@ -141,7 +143,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + TABLE_MOVIE_ACTORS + "(" + KEY_ID + " INTEGER PRIMARY KEY,"
             + KEY_MOVIE_ID + " INTEGER,"
             + KEY_ACTOR_ID + " INTEGER" + ")";
-
+    /******************************************************************************************************************/
     @Override
     public void onCreate(SQLiteDatabase db) {
         // creating required tables
@@ -151,7 +153,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_STUDENTS_SUBJECTS);
         db.execSQL(CREATE_TABLE_STUDENTS_PARTS);
         db.execSQL(CREATE_TABLE_ADMINS);
-        ////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////
         db.execSQL(CREATE_TABLE_ACTORS);
         db.execSQL(CREATE_TABLE_DIRECTORS);
         db.execSQL(CREATE_TABLE_MOVIES);
@@ -167,7 +169,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STUDENTS_SUBJECTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STUDENTS_PARTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ADMINS);
-        ////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTORS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DIRECTORS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MOVIES);
@@ -189,7 +191,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_STUDENTS_SUBJECTS);
         db.execSQL(CREATE_TABLE_STUDENTS_PARTS);
         db.execSQL(CREATE_TABLE_ADMINS);
-        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////
         db.execSQL(CREATE_TABLE_ACTORS);
         db.execSQL(CREATE_TABLE_DIRECTORS);
         db.execSQL(CREATE_TABLE_MOVIES);
@@ -204,7 +206,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STUDENTS_SUBJECTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STUDENTS_PARTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ADMINS);
-        ////////////////////////////////////////////////////////////////////////////////////////////
+
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTORS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DIRECTORS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MOVIES);
@@ -227,9 +229,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return admin_id;
     }
-    /*
-     * Check if amin with given username and password
-     */
     public boolean findAdmin(String un, String pass) {
         boolean admin_found = false;
 
@@ -255,7 +254,79 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return admin_found;
     }
+    /*
+     * getting all Subjects
+     * SELECT * FROM subjects;
+     * */
+    public ArrayList<Admin> getAllAdmins() {
+        ArrayList<Admin> admins = new ArrayList<Admin>();
+        String selectQuery = "SELECT  * FROM " + TABLE_ADMINS;
 
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Admin a = new Admin();
+                a.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+                a.setUserName((c.getString(c.getColumnIndex(KEY_USERNAME))));
+                a.setPassword(c.getString(c.getColumnIndex(KEY_PASSWORD)));
+                // adding to todo list
+                admins.add(a);
+            } while (c.moveToNext());
+        }
+        return admins;
+    }
+    public boolean findStudent(String un, String pass) {
+        boolean student_found = false;
+
+        ArrayList<Student> students = new ArrayList<Student>();
+        String selectQuery = "SELECT  * FROM " + TABLE_STUDENTS;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+        String inputUserName;
+        String inputPassword;
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                inputUserName = (c.getString(c.getColumnIndex(KEY_USERNAME)));
+                Log.i("MyTag", "username ="+ inputUserName);
+                inputPassword = (c.getString(c.getColumnIndex(KEY_PASSWORD)));
+                Log.i("MyTag", "password ="+ inputPassword);
+                if(inputUserName.equals(un)  && inputPassword.equals(pass)){
+                    student_found = true;
+                    break;
+                }
+            } while (c.moveToNext());
+        }
+        return student_found;
+    }
+    public int getStudentIDWithUserName(String un) {
+        int tempID = 500;
+        String selectQuery = "SELECT  * FROM " + TABLE_STUDENTS;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+        String inputUserName;
+        String inputPassword;
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                inputUserName = (c.getString(c.getColumnIndex(KEY_USERNAME)));
+                inputPassword = (c.getString(c.getColumnIndex(KEY_PASSWORD)));
+                if(inputUserName.equals(un)){
+                    tempID = c.getInt(c.getColumnIndex(KEY_ID));
+                    break;
+                }
+            } while (c.moveToNext());
+        }
+        return tempID;
+    }
     /*
      * Creating a student
      */
@@ -276,9 +347,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return student_id;
     }
-    /*
-     * Get student with student ID
-     */
+
+    public long createSubject(Subject subject) {
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, subject.getName());//kljuc mora da se slaze sa nazivom kolone
+        values.put(KEY_YEAR, subject.getYear());
+        // insert row
+        long subject_id = db.insert(TABLE_SUBJECTS, null, values);
+
+        //now we know id obtained after writing actor to a database, update existing actor
+        subject.setId(subject_id);
+
+        return subject_id;
+    }
+
+    public long createPart(SubjectPart part) {
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, part.getName());//kljuc mora da se slaze sa nazivom kolone
+        values.put(KEY_MIN_POINTS, part.getMinPoints());
+        values.put(KEY_MAX_POINTS, part.getMaxPoints());
+        // insert row
+        long subject_id = db.insert(TABLE_PARTS, null, values);
+
+        //now we know id obtained after writing actor to a database, update existing actor
+        part.setId(subject_id);
+
+        return subject_id;
+    }
+
+    public void addStudentsInSubject(Subject subject) {
+        //read all actors for a given movie and for each actor insert a row in a table movie_actors
+        for (Student student : subject.getStudents()){
+            ContentValues values = new ContentValues();
+            values.put(KEY_STUDENT_ID, student.getId());
+            values.put(KEY_SUBJECT_ID, subject.getId());
+            // insert row
+            db.insert(TABLE_STUDENTS_SUBJECTS, null, values);
+        }
+    }
+
     public Student getStudent(long student_id) {
 
         String selectQuery = "SELECT  * FROM " + TABLE_STUDENTS + " WHERE "
@@ -303,61 +412,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return st;
     }
     /*
-     * Find student with his username and password
-     */
-    public boolean findStudent(String un, String pass) {
-        boolean student_found = false;
-
-        ArrayList<Student> students = new ArrayList<Student>();
-        String selectQuery = "SELECT  * FROM " + TABLE_STUDENTS;
-
-        Log.e(LOG, selectQuery);
-
-        Cursor c = db.rawQuery(selectQuery, null);
-        String inputUserName;
-        String inputPassword;
-        // looping through all rows and adding to list
-        if (c.moveToFirst()) {
-            do {
-                inputUserName = (c.getString(c.getColumnIndex(KEY_USERNAME)));
-                inputPassword = (c.getString(c.getColumnIndex(KEY_PASSWORD)));
-                if(inputUserName.equals(un)  && inputPassword.equals(pass)){
-                    student_found = true;
-                    break;
-                }
-            } while (c.moveToNext());
-        }
-        return student_found;
-    }
-    /*
-     * Get student ID with username
-     */
-    public int getStudentIDWithUserName(String un) {
-        boolean student_found = false;
-        int tempID=1000000;
-        ArrayList<Admin> students = new ArrayList<Admin>();
-        String selectQuery = "SELECT  * FROM " + TABLE_STUDENTS;
-
-        Log.e(LOG, selectQuery);
-
-        Cursor c = db.rawQuery(selectQuery, null);
-        String inputUserName;
-        String inputPassword;
-        // looping through all rows and adding to list
-        if (c.moveToFirst()) {
-            do {
-                inputUserName = (c.getString(c.getColumnIndex(KEY_USERNAME)));
-                inputPassword = (c.getString(c.getColumnIndex(KEY_PASSWORD)));
-                if(inputUserName.equals(un)){
-                    tempID = c.getInt(c.getColumnIndex(KEY_ID));
-                    break;
-                }
-            } while (c.moveToNext());
-        }
-        return tempID;
-    }
-    /*
-     * Updating an Student using data in an object student
+     * Updating an Actor using data in an object actor
      */
     public int updateStudent(Student student) {
 
@@ -372,9 +427,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.update(TABLE_STUDENTS, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(student.getId()) });
     }
-    /*
-     * Creating a subject
-     */
+
     /*
      * Deleting an Student using actor id
      */
@@ -383,9 +436,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(TABLE_STUDENTS, KEY_ID + " = ?",
                 new String[] { String.valueOf(student_id) });
     }
-    /*
-     * Creating a subject
-     */
+
+    public Subject getSubject(long subject_id) {
+
+        String selectQuery = "SELECT  * FROM " + TABLE_SUBJECTS + " WHERE "
+                + KEY_ID + " = " + subject_id;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        Subject subj = new Subject();
+        subj.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+        subj.setName((c.getString(c.getColumnIndex(KEY_NAME))));
+        subj.setYear(c.getString(c.getColumnIndex(KEY_YEAR)));
+
+        return subj;
+    }
+
     /*
      * getting all Students
      * SELECT * FROM students;
@@ -416,41 +487,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return students;
     }
-    public long createSubject(Subject subject) {
-
-        ContentValues values = new ContentValues();
-        values.put(KEY_NAME, subject.getName());//kljuc mora da se slaze sa nazivom kolone
-        values.put(KEY_YEAR, subject.getYear());
-        // insert row
-        long subject_id = db.insert(TABLE_SUBJECTS, null, values);
-
-        //now we know id obtained after writing actor to a database, update existing actor
-        subject.setId(subject_id);
-
-        return subject_id;
-    }
-    /*
-     * Get subject with ID
-     */
-    public Subject getSubject(long subject_id) {
-
-        String selectQuery = "SELECT  * FROM " + TABLE_SUBJECTS + " WHERE "
-                + KEY_ID + " = " + subject_id;
-
-        Log.e(LOG, selectQuery);
-
-        Cursor c = db.rawQuery(selectQuery, null);
-
-        if (c != null)
-            c.moveToFirst();
-
-        Subject subj = new Subject();
-        subj.setId(c.getInt(c.getColumnIndex(KEY_ID)));
-        subj.setName((c.getString(c.getColumnIndex(KEY_NAME))));
-        subj.setYear(c.getString(c.getColumnIndex(KEY_YEAR)));
-
-        return subj;
-    }
     /*
      * getting all Subjects
      * SELECT * FROM subjects;
@@ -477,38 +513,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return subjects;
     }
-    /*
-     * Creating a part
-     */
-    public long createPart(SubjectPart part) {
 
-        ContentValues values = new ContentValues();
-        values.put(KEY_NAME, part.getName());//kljuc mora da se slaze sa nazivom kolone
-        values.put(KEY_MIN_POINTS, part.getMinPoints());
-        values.put(KEY_MAX_POINTS, part.getMaxPoints());
-        // insert row
-        long subject_id = db.insert(TABLE_PARTS, null, values);
-
-        //now we know id obtained after writing actor to a database, update existing actor
-        part.setId(subject_id);
-
-        return subject_id;
-    }
-    /*
-     * Add students in subjects
-     */
-    public void addStudentsInSubject(Subject subject) {
-        //read all actors for a given movie and for each actor insert a row in a table movie_actors
-        for (Student student : subject.getStudents()){
-            ContentValues values = new ContentValues();
-            values.put(KEY_STUDENT_ID, student.getId());
-            values.put(KEY_SUBJECT_ID, subject.getId());
-            // insert row
-            db.insert(TABLE_STUDENTS_SUBJECTS, null, values);
-        }
-    }
     /*
      * getting all students attending a subject
+     * SELECT a.id, m.name FROM actors a, movies m, movie_actors ma WHERE m.name LIKE ‘Pulp%’ AND m.id = ma.movie_id AND a.id = ma.actor_id;
+     * SELECT s.id, c.name FROM studen s, subjec c, stuce_subjec sc WHERE c.name LIKE ‘Razv%’ AND c.id = sc.subje_id AND s.id = sc.student_id
      * */
     public List<Student> getAllStudentsInSubject(String subjectName) {
         List<Student> students = new ArrayList<Student>();
@@ -535,9 +544,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return students;
     }
-    /*
-     * getting all subjects of student
-     * */
+
+    //SELECT s.id, c.name FROM studen s, subjec c, stuce_subjec sc WHERE c.name LIKE ‘Razv%’ AND c.id = sc.subje_id AND s.id = sc.student_id
+
     public ArrayList<Subject> getAllSubjectsOfStudent(String studentName) {
         ArrayList<Subject> subjects = new ArrayList<Subject>();
 
@@ -564,7 +573,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return subjects;
     }
-    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /**********************************************************************************************/
     /*
      * Creating an actor
      */
@@ -863,6 +872,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (db != null && db.isOpen())
             db.close();
     }
-
 
 }

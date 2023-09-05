@@ -2,23 +2,33 @@ package uns.ftn.deet.kel.moviesdatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import uns.ftn.deet.kel.moviesdatabase.sqlite.helper.DatabaseHelper;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Actor;
+import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Admin;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Director;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Movie;
+import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Student;
 
 public class MainActivity extends AppCompatActivity {
     // Database Helper
-    DatabaseHelper databaseHelper;
+    static DatabaseHelper databaseHelper;
+
+    EditText txtUserName;
+    EditText txtPassword;
+    Button btnLogIn;
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     Spinner spnActors;
     Spinner spnDirectors;
     Spinner spnMovies;
@@ -30,14 +40,34 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         databaseHelper.closeDB();
-
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        txtUserName = (EditText) findViewById(R.id.txtUserName);
+        txtPassword = (EditText) findViewById(R.id.txtPassword);
+
+        btnLogIn = (Button) findViewById(R.id.btnLogIn);
+        btnLogIn.setOnClickListener(new View.OnClickListener() {
+        @Override
+            public void onClick(View view) {
+                if (databaseHelper.findAdmin(txtUserName.getText().toString(), txtPassword.getText().toString())) {
+                    Toast.makeText(MainActivity.this, "Uspesno logovanje: Admin", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, AdminActivity.class);
+                    startActivity(intent);
+                } else if (databaseHelper.findStudent(txtUserName.getText().toString(), txtPassword.getText().toString())) {
+                    Toast.makeText(MainActivity.this, "Uspesno logovanje: Student", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, StudentActivity.class);
+                    intent.putExtra("key_username", txtUserName.getText().toString()); // Replace "key" with a meaningful identifier and "value" with the actual data you want to pass
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(MainActivity.this, "Neuspesno logovanje " + txtUserName.getText().toString() + " " + txtPassword.getText().toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+         });
 
         spnActors = (Spinner) findViewById(R.id.spnActors);
         spnDirectors = (Spinner) findViewById(R.id.spnDirectors);
@@ -49,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (databaseHelper != null) {
                     databaseHelper.dropTables();
-                    loadSpinnerDataActors(new ArrayList<Actor>());
-                    loadSpinnerDataDirectors(new ArrayList<>());
+                    loadSpinnerDataActors(new ArrayList<Admin>());
+                    loadSpinnerStudents(new ArrayList<>());
                     loadSpinnerDataMovies(new ArrayList<>());
                 }
 
@@ -62,9 +92,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (spnMovies.getSelectedItem() != null) {
-                    String movie = spnMovies.getSelectedItem().toString();
-                    List<Actor> lst = databaseHelper.getAllActorsInMovie(movie);
-                    loadSpinnerDataActors((ArrayList<Actor>) lst);
+                    List<Admin> adm = databaseHelper.getAllAdmins();
+                    loadSpinnerDataActors((ArrayList<Admin>) adm);
                 }
             }
         });
@@ -86,6 +115,17 @@ public class MainActivity extends AppCompatActivity {
         databaseHelper.createTables();
 
         if (databaseHelper.getAllActors().size() == 0) {
+            Admin admin1 = new Admin("admin","admin");
+            Admin admin2 = new Admin("admo","admii");
+
+            Student s1 = new Student("Aleksa", "Aleksic", "e1-2018", "0101999800068", "alek", "goku123");
+            Student s2 = new Student("Petar", "Petrovic", "e1-2017", "0102998810062", "pero", "asdf123");
+
+            databaseHelper.createAdmin(admin1);
+            databaseHelper.createAdmin(admin2);
+            databaseHelper.createStudent(s1);
+            databaseHelper.createStudent(s2);
+
             Actor a1 = new Actor("Brad Pitt", "18-12-1963");
             Actor a2 = new Actor("Edward Norton", "18-08-1969");
             Actor a3 = new Actor("Samuel L. Jackson", "21-12-1948");
@@ -150,21 +190,21 @@ public class MainActivity extends AppCompatActivity {
             databaseHelper.addActorsInMovie(m7);
         }
 
-        List<Actor> la = databaseHelper.getAllActors();
-        loadSpinnerDataActors((ArrayList<Actor>) la);
-        List<Director> ld = databaseHelper.getAllDirectors();
-        loadSpinnerDataDirectors((ArrayList<Director>) ld);
+        List<Admin> ad = databaseHelper.getAllAdmins();
+        loadSpinnerDataActors((ArrayList<Admin>) ad);
+        List<Student> ld = databaseHelper.getAllStudents();
+        loadSpinnerStudents((ArrayList<Student>) ld);
         List<Movie> mv = databaseHelper.getAllMovies();
         loadSpinnerDataMovies((ArrayList<Movie>) mv);
 
     }
-    void loadSpinnerDataActors (ArrayList<Actor> al){
-        ArrayList<String> actornames = new ArrayList<>();
-        for (Actor actor : al){
-            actornames.add(actor.getName());
+    void loadSpinnerDataActors (ArrayList<Admin> ad){
+        ArrayList<String> adminnames = new ArrayList<>();
+        for (Admin admin : ad){
+            adminnames.add(admin.getUserName());
         }
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, actornames);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, adminnames);
 
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -173,13 +213,13 @@ public class MainActivity extends AppCompatActivity {
         spnActors.setAdapter(dataAdapter);
     }
 
-    void loadSpinnerDataDirectors (ArrayList<Director> al){
-        ArrayList<String> directornames = new ArrayList<>();
-        for (Director director : al){
-            directornames.add(director.getName());
+    void loadSpinnerStudents (ArrayList<Student> st){
+        ArrayList<String> studentnames = new ArrayList<>();
+        for (Student student : st){
+            studentnames.add(student.getName());
         }
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, directornames);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, studentnames);
 
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
