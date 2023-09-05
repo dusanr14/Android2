@@ -35,7 +35,7 @@ public class StudentActivity extends AppCompatActivity {
         txtIndex = (TextView) findViewById(R.id.txtIndex);
         txtJmbg = (TextView) findViewById(R.id.txtJmbg);
         btnShow = (Button) findViewById(R.id.btnAddAdmin);
-        spnSubjects = (Spinner) findViewById(R.id.spnSubjects);
+        spnSubjects = (Spinner) findViewById(R.id.spnStudents);
         Intent receivedIntent = getIntent();
         String recUser = receivedIntent.getStringExtra("key_username"); // Replace "key" with the same key used to send the data
         btnShow.setOnClickListener(new View.OnClickListener() {
