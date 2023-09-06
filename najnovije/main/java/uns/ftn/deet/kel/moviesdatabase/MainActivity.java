@@ -35,11 +35,11 @@ public class MainActivity extends AppCompatActivity {
     Button btnDeleteDatabase;
     Button btnFindActors;
     Button btnRestoreDatabase;
-
+    Button btnExit;
     @Override
     protected void onStop() {
         super.onStop();
-        databaseHelper.closeDB();
+        //databaseHelper.closeDB();
     }
 
     @Override
@@ -103,6 +103,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 createTablesAndInitData();
+            }
+        });
+
+        btnExit = (Button) findViewById(R.id.btnExit);
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseHelper.closeDB();
+                finish();
             }
         });
         databaseHelper = new DatabaseHelper(getApplicationContext());

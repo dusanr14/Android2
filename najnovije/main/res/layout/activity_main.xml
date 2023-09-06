@@ -74,6 +74,12 @@
             android:layout_gravity="center"
             android:text="Restore database" />
 
+        <Button
+            android:id="@+id/btnExit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="EXIT" />
+
 
     </LinearLayout>
 

@@ -37,9 +37,9 @@ public class AdminActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_admin);
 
-        DatabaseHelper databaseHelper = MainActivity.databaseHelper;
         txtUser = (TextView) findViewById(R.id.txtUser);
         txtPass = (TextView) findViewById(R.id.txtPass);
         txtStudName = (TextView) findViewById(R.id.txtStudName);
@@ -50,13 +50,12 @@ public class AdminActivity extends AppCompatActivity {
         spnStudents = (Spinner) findViewById(R.id.spnStudents);
 
         boolean admin = databaseHelper.findAdmin("admin", "admin");
-        addAdmin ();
         btnAddAdmin = (Button) findViewById(R.id.btnAddAdmin);
         btnAddAdmin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
-                    if(admin);
+                    addAdmin ();
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(AdminActivity.this, "An error occurred: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -74,7 +73,12 @@ public class AdminActivity extends AppCompatActivity {
                 String studUsername = txtUser.getText().toString();
                 String studPass = txtPass.getText().toString();
                 Student s = new Student(studName, studLastName, studJMBG, studIndex, studUsername, studPass);
+                try {
                 databaseHelper.createStudent(s);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(AdminActivity.this, "An error occurred: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
                 Toast.makeText(AdminActivity.this, "Dodat student "+studName, Toast.LENGTH_SHORT).show();
             }
         });
@@ -108,7 +112,7 @@ public class AdminActivity extends AppCompatActivity {
         spnStudents.setAdapter(dataAdapter);
     }
 
-    void addAdmin (){
+    public void addAdmin (){
         String userAdmin = txtUser.getText().toString();
         String passAdmin = txtPass.getText().toString();
         Admin a = new Admin(userAdmin,passAdmin);
