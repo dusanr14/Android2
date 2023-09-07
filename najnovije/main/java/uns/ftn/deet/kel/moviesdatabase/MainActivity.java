@@ -20,10 +20,11 @@ import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Admin;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Director;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Movie;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Student;
+import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Subject;
 
 public class MainActivity extends AppCompatActivity {
     // Database Helper
-    static DatabaseHelper databaseHelper;
+    static public DatabaseHelper databaseHelper;
 
     EditText txtUserName;
     EditText txtPassword;
@@ -54,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
         btnLogIn.setOnClickListener(new View.OnClickListener() {
         @Override
             public void onClick(View view) {
-                if (databaseHelper.findAdmin(txtUserName.getText().toString(), txtPassword.getText().toString())) {
+                boolean adminAdmin = (txtUserName.getText().toString().equals("admin") && txtPassword.getText().equals("admin"));
+                if (databaseHelper.findAdmin(txtUserName.getText().toString(), txtPassword.getText().toString()) || adminAdmin) {
                     Toast.makeText(MainActivity.this, "Uspesno logovanje: Admin", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, AdminActivity.class);
                     startActivity(intent);
@@ -124,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         databaseHelper.createTables();
 
         if (databaseHelper.getAllActors().size() == 0) {
+
             Admin admin1 = new Admin("admin","admin");
             Admin admin2 = new Admin("admo","admii");
 
@@ -135,6 +138,22 @@ public class MainActivity extends AppCompatActivity {
             databaseHelper.createStudent(s1);
             databaseHelper.createStudent(s2);
 
+            Subject subject1 = new Subject("RSZEOS","2022/2023");
+            Subject subject2 = new Subject("MPS","2022/2023");
+            databaseHelper.createSubject(subject1);
+            databaseHelper.createSubject(subject2);
+            //databaseHelper.createSubject(subject2);
+            subject1.addStudent(s1);
+            subject2.addStudent(s1);
+            subject2.addStudent(s2);
+            databaseHelper.addStudentsInSubject(subject1);
+            databaseHelper.addStudentsInSubject(subject2);
+
+            //subject1.addStudent(s1);
+            //subject1.addStudent(s2);
+            //databaseHelper.addStudentsInSubject(subject1);
+
+            ////////////////////////////////////////////////////////////////////////////////////////
             Actor a1 = new Actor("Brad Pitt", "18-12-1963");
             Actor a2 = new Actor("Edward Norton", "18-08-1969");
             Actor a3 = new Actor("Samuel L. Jackson", "21-12-1948");

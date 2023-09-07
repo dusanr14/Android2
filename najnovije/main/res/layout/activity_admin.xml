@@ -64,14 +64,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"/>
-
+    <Button
+        android:id="@+id/btnSeeStudents"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="See Student informations" />
+    <Button
+        android:id="@+id/btnSubjects"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Subject actions" />
     <Button
         android:id="@+id/btnBackToMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Go to Log In" /><![CDATA[
+        android:text="Go to Log In" />
+
+    <![CDATA[
+
 
     />
+
 
   ]]>
   </LinearLayout>

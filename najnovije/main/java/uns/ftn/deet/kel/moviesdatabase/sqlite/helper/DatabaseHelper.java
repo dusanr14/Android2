@@ -229,6 +229,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return admin_id;
     }
+    /*
+     * Find admin using username and password
+     */
     public boolean findAdmin(String un, String pass) {
         boolean admin_found = false;
 
@@ -547,13 +550,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //SELECT s.id, c.name FROM studen s, subjec c, stuce_subjec sc WHERE c.name LIKE ‘Razv%’ AND c.id = sc.subje_id AND s.id = sc.student_id
 
-    public ArrayList<Subject> getAllSubjectsOfStudent(String studentName) {
+    public ArrayList<Subject> getAllSubjectsOfStudent(String studentUserName) {
         ArrayList<Subject> subjects = new ArrayList<Subject>();
 
         String selectQuery = "SELECT  sb." + KEY_ID + ", st." + KEY_NAME + " FROM " + TABLE_SUBJECTS + " sb, "
                 + TABLE_STUDENTS + " st, " + TABLE_STUDENTS_SUBJECTS + " sc " +
-                "WHERE UPPER(st." + KEY_NAME + ") " +
-                "LIKE '" + studentName.toUpperCase() + "%'" +
+                "WHERE UPPER(st." + KEY_USERNAME + ") " +
+                "LIKE '" + studentUserName.toUpperCase() + "%'" +
                 "AND sb." + KEY_ID + " = " + "sc." + KEY_SUBJECT_ID + " " +
                 "AND st." + KEY_ID + " = " + "sc." + KEY_STUDENT_ID;
 

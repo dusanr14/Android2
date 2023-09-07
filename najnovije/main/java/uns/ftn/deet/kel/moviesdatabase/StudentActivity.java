@@ -3,7 +3,6 @@ package uns.ftn.deet.kel.moviesdatabase;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import static uns.ftn.deet.kel.moviesdatabase.MainActivity.databaseHelper;
 import java.util.ArrayList;
 
-import uns.ftn.deet.kel.moviesdatabase.sqlite.helper.DatabaseHelper;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Student;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Subject;
 
@@ -51,7 +49,7 @@ public class StudentActivity extends AppCompatActivity {
         txtStudLastName.setText(student.getLastName());
         txtIndex.setText(student.getIndex());
         txtJmbg.setText(student.getJmbg());
-        loadSpinnerSubjects(databaseHelper.getAllSubjectsOfStudent(student.getName()));
+        loadSpinnerSubjects(student.getUserName());
 
         btnBack = (Button) findViewById(R.id.btnBack);
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -64,22 +62,14 @@ public class StudentActivity extends AppCompatActivity {
 
     }
 
-    void loadSpinnerSubjects (ArrayList<Subject> su){
-        ArrayList<String> subjectnames = new ArrayList<>();
-        ArrayList<Subject> subjects = new ArrayList<Subject>();
-        ArrayList<Student> students = new ArrayList<Student>();
-        students = databaseHelper.getAllStudents();
-        subjects = databaseHelper.getAllSubjects();
-        if (su.isEmpty()){
-            Toast.makeText(StudentActivity.this, "Prazno", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(StudentActivity.this, "Ima nesto", Toast.LENGTH_SHORT).show();
+    void loadSpinnerSubjects (String userName){
+        ArrayList<Subject> subjects = new ArrayList<>();
+        ArrayList<String> subjectsNames = new ArrayList<>();
+        subjects = databaseHelper.getAllSubjectsOfStudent(userName);
+        for(Subject s: subjects){
+            subjectsNames.add(s.getName());
         }
-        for (Subject subject : su){
-            subjectnames.add(subject.getName());
-        }
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, subjectnames);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, subjectsNames);
 
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
