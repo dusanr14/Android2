@@ -89,11 +89,13 @@ public class AdminActivity extends AppCompatActivity {
                 if (studJMBG.length() == 13 && !studentExists) {
                     databaseHelper.createStudent(s);
                     Toast.makeText(AdminActivity.this, "Dodat student " + studName, Toast.LENGTH_SHORT).show();
-                    List<Student> ld = databaseHelper.getAllStudents();
-                    loadSpinnerStudents((ArrayList<Student>) ld);
+                    ;
                 } else {
                     Toast.makeText(AdminActivity.this, "Neispravan unos JMBG-a, ili username zauzet", Toast.LENGTH_SHORT).show();
                 }
+                List<Student> ld = databaseHelper.getAllStudents();
+                loadSpinnerStudents((ArrayList<Student>) ld);
+
             }
         });
 

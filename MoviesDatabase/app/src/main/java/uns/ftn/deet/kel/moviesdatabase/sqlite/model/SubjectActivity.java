@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
+import java.util.ArrayList;
+
 import uns.ftn.deet.kel.moviesdatabase.AdminActivity;
 import uns.ftn.deet.kel.moviesdatabase.MainActivity;
 import uns.ftn.deet.kel.moviesdatabase.R;
@@ -35,23 +37,31 @@ public class SubjectActivity extends AppCompatActivity {
         btnAddSubject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean correctYear = true;
+                boolean correctFormat = true;
                 String subjName = txtSubjectName.getText().toString();
                 String subjYear = txtSubjectYear.getText().toString();
+
+                ArrayList<Subject> allSubjects= databaseHelper.getAllSubjects();
+
+                for(Subject sub: allSubjects){
+                    if(sub.getName().equals(subjName) && sub.getYear().equals(subjYear))
+                        correctFormat = false;
+                }
                 if(!subjYear.contains(String.valueOf('/'))){
-                    correctYear = false;
+                    correctFormat = false;
                 } else {
                     String[] str = subjYear.split("/");
                     if(Integer.parseInt(str[1]) != (Integer.parseInt(str[0]) + 1)){
-                        correctYear = false;
+                        correctFormat = false;
                     }
                 }
-                if(correctYear == true){
+
+                if(correctFormat == true){
                     Subject subject = new Subject(subjName,subjYear);
                     databaseHelper.createSubject(subject);
                     Toast.makeText(SubjectActivity.this, "Dodat predmet " + subjName, Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(SubjectActivity.this, "Neuspesno. Pogresan format godine. ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SubjectActivity.this, "Neuspesno. Vec postoji predmet ili pogresan format godine. ", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -62,7 +72,7 @@ public class SubjectActivity extends AppCompatActivity {
         btnBackToAdmin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SubjectActivity.this, MainActivity.class);
+                Intent intent = new Intent(SubjectActivity.this, AdminActivity.class);
                 startActivity(intent);
             }
         });

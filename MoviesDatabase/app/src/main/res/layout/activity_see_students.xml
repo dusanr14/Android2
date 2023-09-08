@@ -61,18 +61,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="JMBG"
-            android:layout_marginBottom="34dp"/>/>
+            android:layout_marginBottom="34dp"/>
 
         <Spinner
             android:id="@+id/spnSubjects"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="34dp"/>
+        <TextView
+            android:id="@+id/txtInfoStudSubj"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add selected subject to selected student"
+            android:layout_marginBottom="34dp"/>
+
+        <Spinner
+            android:id="@+id/spnAddSubjects"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="34dp"/>
+
+        <Button
+            android:id="@+id/btnAddSubjectToStudent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Subject To Student" />
 
         <Button
             android:id="@+id/btnBack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Back to loigin" />/>
+            android:text="Back" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

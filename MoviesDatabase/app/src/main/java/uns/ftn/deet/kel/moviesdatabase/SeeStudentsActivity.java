@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -26,12 +27,13 @@ public class SeeStudentsActivity extends AppCompatActivity {
     TextView txtIndex;
     TextView txtJmbg;
     Button btnBack;
-
+    Button btnAddSubjectToStudent;
     TextView txtStudUser;
     TextView txtStudPass;
 
     Spinner spnSubjects;
     Spinner spnStudents;
+    Spinner spnAddSubjects;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,13 +48,13 @@ public class SeeStudentsActivity extends AppCompatActivity {
         txtJmbg =  findViewById(R.id.txtJmbg);
 
         spnSubjects = findViewById(R.id.spnSubjects);
-
+        spnAddSubjects = findViewById(R.id.spnAddSubjects);
         Student student = new Student();
 
         ArrayList<Student> st = new ArrayList<>();
         st = databaseHelper.getAllStudents();
         loadSpinnerStudents(st);
-
+        loadSpinnerAddSubjects();
         btnSeeStudent = (Button) findViewById(R.id.btnSeeStudent);
         btnSeeStudent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,18 +83,44 @@ public class SeeStudentsActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SeeStudentsActivity.this, MainActivity.class);
+                Intent intent = new Intent(SeeStudentsActivity.this, AdminActivity.class);
                 startActivity(intent);
+            }
+        });
+        btnAddSubjectToStudent = (Button) findViewById(R.id.btnAddSubjectToStudent);
+        btnAddSubjectToStudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<Subject> allSubjects= databaseHelper.getAllSubjects();
+                ArrayList<Subject> studentSubjects= databaseHelper.getAllSubjectsOfStudent(spnStudents.getSelectedItem().toString());
+                Subject selectedSubject = new Subject();
+                for(Subject s: allSubjects){
+                    Toast.makeText(SeeStudentsActivity.this, s.getName() +" "+ s.getYear(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
+    void loadSpinnerAddSubjects (){
+        ArrayList<String> subjectsNames = new ArrayList<>();
+        ArrayList<Subject> subjects = databaseHelper.getAllSubjects();
+        for(Subject s: subjects){
+            subjectsNames.add(s.getName()+" "+s.getYear());
+        }
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, subjectsNames);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spnAddSubjects.setAdapter(dataAdapter);
+    }
     void loadSpinnerSubjects (String userName){
         ArrayList<Subject> subjects = new ArrayList<>();
         ArrayList<String> subjectsNames = new ArrayList<>();
         subjects = databaseHelper.getAllSubjectsOfStudent(userName);
         for(Subject s: subjects){
-            subjectsNames.add(s.getName());
+            subjectsNames.add(s.getName()+" "+s.getYear());
         }
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, subjectsNames);
 
