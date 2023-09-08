@@ -9,7 +9,31 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <Spinner
+            android:id="@+id/spnStudents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="34dp"/>
 
+        <Button
+            android:id="@+id/btnSeeStudent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="See selected student" />
+
+        <TextView
+            android:id="@+id/txtStudUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="User Name"
+            android:layout_marginBottom="34dp"/>
+
+        <TextView
+            android:id="@+id/txtStudPass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="34dp"
+            android:text="Password" />
 
         <TextView
             android:id="@+id/txtAdminUser"
@@ -39,9 +63,8 @@
             android:text="JMBG"
             android:layout_marginBottom="34dp"/>/>
 
-
         <Spinner
-            android:id="@+id/spnStudents"
+            android:id="@+id/spnSubjects"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="34dp"/>

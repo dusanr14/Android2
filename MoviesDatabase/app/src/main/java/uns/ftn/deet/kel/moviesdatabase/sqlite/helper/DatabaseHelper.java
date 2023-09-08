@@ -229,6 +229,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return admin_id;
     }
+    /*
+     * Find admin using username and password
+     */
     public boolean findAdmin(String un, String pass) {
         boolean admin_found = false;
 
@@ -245,9 +248,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 Admin a = new Admin();
                 inputUserName = (c.getString(c.getColumnIndex(KEY_USERNAME)));
-                Log.i("MyTag", "username ="+ inputUserName);
                 inputPassword = (c.getString(c.getColumnIndex(KEY_PASSWORD)));
-                Log.i("MyTag", "password ="+ inputPassword);
                 if(inputUserName.equals(un)  && inputPassword.equals(pass)){
                     admin_found = true;
                     break;
@@ -256,7 +257,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return admin_found;
     }
+    /*
+     * getting all Subjects
+     * SELECT * FROM subjects;
+     * */
+    public ArrayList<Admin> getAllAdmins() {
+        ArrayList<Admin> admins = new ArrayList<Admin>();
+        String selectQuery = "SELECT  * FROM " + TABLE_ADMINS;
 
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Admin a = new Admin();
+                a.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+                a.setUserName((c.getString(c.getColumnIndex(KEY_USERNAME))));
+                a.setPassword(c.getString(c.getColumnIndex(KEY_PASSWORD)));
+                // adding to todo list
+                admins.add(a);
+            } while (c.moveToNext());
+        }
+        return admins;
+    }
     public boolean findStudent(String un, String pass) {
         boolean student_found = false;
 
@@ -284,9 +309,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return student_found;
     }
     public int getStudentIDWithUserName(String un) {
-        boolean student_found = false;
         int tempID = 500;
-        ArrayList<Admin> students = new ArrayList<Admin>();
         String selectQuery = "SELECT  * FROM " + TABLE_STUDENTS;
 
         Log.e(LOG, selectQuery);
@@ -314,7 +337,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, student.getName());//kljuc mora da se slaze sa nazivom kolone
-        values.put(KEY_LAST_NAME, student.getLastName());
         values.put(KEY_LAST_NAME, student.getLastName());
         values.put(KEY_INDEX, student.getIndex());
         values.put(KEY_JMBG, student.getJmbg());
@@ -439,8 +461,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /*
-     * getting all actors
-     * SELECT * FROM actors;
+     * getting all Students
+     * SELECT * FROM students;
      * */
     public ArrayList<Student> getAllStudents() {
         ArrayList<Student> students = new ArrayList<Student>();
@@ -469,8 +491,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return students;
     }
     /*
-     * getting all actors
-     * SELECT * FROM actors;
+     * getting all Subjects
+     * SELECT * FROM subjects;
      * */
     public ArrayList<Subject> getAllSubjects() {
         ArrayList<Subject> subjects = new ArrayList<Subject>();
@@ -496,7 +518,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /*
-     * getting all actors acting in a movie
+     * getting all students attending a subject
      * SELECT a.id, m.name FROM actors a, movies m, movie_actors ma WHERE m.name LIKE ‘Pulp%’ AND m.id = ma.movie_id AND a.id = ma.actor_id;
      * SELECT s.id, c.name FROM studen s, subjec c, stuce_subjec sc WHERE c.name LIKE ‘Razv%’ AND c.id = sc.subje_id AND s.id = sc.student_id
      * */
@@ -509,7 +531,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "LIKE '" + subjectName.toUpperCase() + "%'" +
                 "AND sb." + KEY_ID + " = " + "sc." + KEY_SUBJECT_ID + " " +
                 "AND st." + KEY_ID + " = " + "sc." + KEY_STUDENT_ID;
-
 
         Log.e(LOG, selectQuery);
 
@@ -529,13 +550,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //SELECT s.id, c.name FROM studen s, subjec c, stuce_subjec sc WHERE c.name LIKE ‘Razv%’ AND c.id = sc.subje_id AND s.id = sc.student_id
 
-    public ArrayList<Subject> getAllSubjectsOfStudent(String studentName) {
+    public ArrayList<Subject> getAllSubjectsOfStudent(String studentUserName) {
         ArrayList<Subject> subjects = new ArrayList<Subject>();
 
         String selectQuery = "SELECT  sb." + KEY_ID + ", st." + KEY_NAME + " FROM " + TABLE_SUBJECTS + " sb, "
                 + TABLE_STUDENTS + " st, " + TABLE_STUDENTS_SUBJECTS + " sc " +
-                "WHERE UPPER(st." + KEY_NAME + ") " +
-                "LIKE '" + studentName.toUpperCase() + "%'" +
+                "WHERE UPPER(st." + KEY_USERNAME + ") " +
+                "LIKE '" + studentUserName.toUpperCase() + "%'" +
                 "AND sb." + KEY_ID + " = " + "sc." + KEY_SUBJECT_ID + " " +
                 "AND st." + KEY_ID + " = " + "sc." + KEY_STUDENT_ID;
 
@@ -854,6 +875,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (db != null && db.isOpen())
             db.close();
     }
-
 
 }

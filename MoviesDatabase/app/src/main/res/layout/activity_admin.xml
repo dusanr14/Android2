@@ -4,67 +4,88 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/txtUser"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:text="Username" />
 
-        <EditText
-            android:id="@+id/txtUser"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="18dp"
-            android:text="Username" />
+    <EditText
+        android:id="@+id/txtPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:text="Password" />
 
-        <EditText
-            android:id="@+id/txtPass"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="18dp"
-            android:text="Password" />
+    <EditText
+        android:id="@+id/txtStudName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:text="Name" />
+    <EditText
+        android:id="@+id/txtStudLastName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:text="Last Name" />
+    <EditText
+        android:id="@+id/txtStudJMBG"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:text="JMBG" />
+    <EditText
+        android:id="@+id/txtStudIndex"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:text="Index number" />
+    <Button
+        android:id="@+id/btnAddAdmin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:text="Add admin" />
+    <Button
+        android:id="@+id/btnAddStudent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:text="Add student" />
+    <Spinner
+        android:id="@+id/spnStudents"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"/>
+    <Button
+        android:id="@+id/btnSeeStudents"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="See Student informations" />
+    <Button
+        android:id="@+id/btnSubjects"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Subject actions" />
+    <Button
+        android:id="@+id/btnBackToMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Go to Log In" />
 
-        <EditText
-            android:id="@+id/txtStudName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="18dp"
-            android:text="Name" />
-        <EditText
-            android:id="@+id/txtStudLastName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="18dp"
-            android:text="Last Name" />
-        <EditText
-            android:id="@+id/txtStudJMBG"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="18dp"
-            android:text="JMBG" />
-        <EditText
-            android:id="@+id/txtStudIndex"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="18dp"
-            android:text="Index number" />
-        <Button
-            android:id="@+id/btnAddAdmin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="18dp"
-            android:text="Add admin" />
-        <Button
-            android:id="@+id/btnAddStudent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="18dp"
-            android:text="Add student" />
-        <Spinner
-            android:id="@+id/spnStudents"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="18dp"/>
-        />
+    <![CDATA[
 
-    </LinearLayout>
+
+    />
+
+
+  ]]>
+  </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
