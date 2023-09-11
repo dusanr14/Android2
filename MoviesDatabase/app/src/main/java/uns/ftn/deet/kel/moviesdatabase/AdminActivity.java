@@ -49,7 +49,7 @@ public class AdminActivity extends AppCompatActivity {
         txtStudJMBG = (TextView) findViewById(R.id.txtStudJMBG);
         txtStudIndex = (TextView) findViewById(R.id.txtStudIndex);
 
-        spnStudents = (Spinner) findViewById(R.id.spnStudents);
+        spnStudents = (Spinner) findViewById(R.id.spnStudSubjects);
 
         boolean admin = databaseHelper.findAdmin("admin", "admin");
         btnAddAdmin = (Button) findViewById(R.id.btnAddAdmin);

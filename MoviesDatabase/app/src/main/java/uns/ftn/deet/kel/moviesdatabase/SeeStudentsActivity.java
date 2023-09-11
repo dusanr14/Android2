@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -21,14 +22,12 @@ import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Subject;
 public class SeeStudentsActivity extends AppCompatActivity {
     //DatabaseHelper databaseHelper = MainActivity.databaseHelper;
 
-    Button btnSeeStudent;
     TextView txtStudName;
     TextView txtStudLastName;
     TextView txtIndex;
     TextView txtJmbg;
     Button btnBack;
     Button btnAddSubjectToStudent;
-    TextView txtStudUser;
     TextView txtStudPass;
 
     Spinner spnSubjects;
@@ -39,26 +38,10 @@ public class SeeStudentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_see_students);
 
-        spnStudents = findViewById(R.id.spnStudents);
-        txtStudUser = findViewById(R.id.txtStudUserName);
-        txtStudPass = findViewById(R.id.txtStudPass);
-        txtStudName =  findViewById(R.id.txtAdminUser);
-        txtStudLastName =  findViewById( R.id.txtAdminPass);
-        txtIndex =  findViewById(R.id.txtIndex);
-        txtJmbg =  findViewById(R.id.txtJmbg);
-
-        spnSubjects = findViewById(R.id.spnSubjects);
-        spnAddSubjects = findViewById(R.id.spnAddSubjects);
-        Student student = new Student();
-
-        ArrayList<Student> st = new ArrayList<>();
-        st = databaseHelper.getAllStudents();
-        loadSpinnerStudents(st);
-        loadSpinnerAddSubjects();
-        btnSeeStudent = (Button) findViewById(R.id.btnSeeStudent);
-        btnSeeStudent.setOnClickListener(new View.OnClickListener() {
+        spnStudents = findViewById(R.id.spnStudSubjects);
+        spnStudents.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String studUs = spnStudents.getSelectedItem().toString();
                 ArrayList<Student> students= new ArrayList<>();
                 Student stud = new Student();
@@ -69,7 +52,6 @@ public class SeeStudentsActivity extends AppCompatActivity {
                         break;
                     }
                 }
-                txtStudUser.setText(stud.getUserName());
                 txtStudPass.setText(stud.getPassword());
                 txtStudName.setText(stud.getName());
                 txtStudLastName.setText(stud.getLastName());
@@ -77,7 +59,28 @@ public class SeeStudentsActivity extends AppCompatActivity {
                 txtJmbg.setText(stud.getJmbg());
                 loadSpinnerSubjects(stud.getUserName());
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Code to execute when nothing is selected
+            }
         });
+        txtStudPass = findViewById(R.id.txtStudPass);
+        txtStudName =  findViewById(R.id.txtAdminUser);
+        txtStudLastName =  findViewById( R.id.txtAdminPass);
+        txtIndex =  findViewById(R.id.txtIndex);
+        txtJmbg =  findViewById(R.id.txtJmbg);
+
+
+        spnSubjects = findViewById(R.id.spnSubjects);
+        spnAddSubjects = findViewById(R.id.spnAddSubjects);
+        Student student = new Student();
+
+
+        ArrayList<Student> st = new ArrayList<>();
+        st = databaseHelper.getAllStudents();
+        loadSpinnerStudents(st);
+        loadSpinnerAddSubjects();
 
         btnBack = (Button) findViewById(R.id.btnBack);
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -87,16 +90,36 @@ public class SeeStudentsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         btnAddSubjectToStudent = (Button) findViewById(R.id.btnAddSubjectToStudent);
         btnAddSubjectToStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean subjectExists = false;
+                String subjectNameYear = spnAddSubjects.getSelectedItem().toString();
+                String[] str = subjectNameYear.split("\\s+");
+                String subjName = str[0];
+                String subjYear = str[1];
                 ArrayList<Subject> allSubjects= databaseHelper.getAllSubjects();
                 ArrayList<Subject> studentSubjects= databaseHelper.getAllSubjectsOfStudent(spnStudents.getSelectedItem().toString());
-                Subject selectedSubject = new Subject();
-                for(Subject s: allSubjects){
-                    Toast.makeText(SeeStudentsActivity.this, s.getName() +" "+ s.getYear(), Toast.LENGTH_SHORT).show();
+                int id = databaseHelper.getSubjectIDWithNameAndYear(subjName,subjYear);
+                Subject selectedSubject = databaseHelper.getSubject(id);
+                // check if subject is already assigned to student
+                for(Subject s: studentSubjects){
+                    if(s.getName().equals(subjName) && s.getYear().equals(subjYear)){
+                        subjectExists = true;
+                    }
                 }
+                Student selectedStudent = databaseHelper.getStudent(databaseHelper.getStudentIDWithUserName(spnStudents.getSelectedItem().toString()));
+
+                if(!subjectExists) {
+                    selectedSubject.addStudent(selectedStudent);
+                    databaseHelper.addStudentsInSubject(selectedSubject);
+                    Toast.makeText(SeeStudentsActivity.this, "Predmet " +selectedSubject.getName()+ " je dodat studentu" + selectedStudent.getName(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SeeStudentsActivity.this, "Odabrani predmet odabrani student vec pohadja ", Toast.LENGTH_SHORT).show();
+                }
+                loadSpinnerSubjects(spnStudents.getSelectedItem().toString());
             }
         });
     }

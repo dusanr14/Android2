@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="text"
-            android:text="admin" />
+            android:text="alek" />
 
         <EditText
             android:id="@+id/txtPassword"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="text"
-            android:text="admin" />
+            android:text="goku123" />
 
         <Button
             android:id="@+id/btnLogIn"

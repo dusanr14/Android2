@@ -8,35 +8,35 @@ public class Subject {
     String year;
 
     ArrayList<Student> students;
-    ArrayList<SubjectPart> parts;
-    public Subject(){this.students = new ArrayList<>(); this.parts = new ArrayList<>();}
+    int obtainedPoints;
+    public Subject(){this.students = new ArrayList<>();}
 
     public Subject(String name, String year) {
         this.name = name;
         this.year = year;
+        this.obtainedPoints = 0;
         this.students = new ArrayList<>();
-        this.parts = new ArrayList<>();
     }
     public Subject(long id, String name, String year) {
         this.id = id;
         this.name = name;
         this.year = year;
+        this.obtainedPoints = 0;
         this.students = new ArrayList<>();
-        this.parts = new ArrayList<>();
     }
 
     public Subject(String name, String year, ArrayList<Student> students, ArrayList<SubjectPart> parts) {
         this.name = name;
         this.year = year;
+        this.obtainedPoints = 0;
         this.students = students;
-        this.parts = parts;
     }
     public Subject(long id, String name, String year, ArrayList<Student> students, ArrayList<SubjectPart> parts) {
         this.id = id;
         this.name = name;
         this.year = year;
+        this.obtainedPoints = 0;
         this.students = students;
-        this.parts = parts;
     }
 
     public long getId() {
@@ -63,16 +63,13 @@ public class Subject {
         this.year = year;
     }
 
-
-
-    public ArrayList<SubjectPart> getParts() {
-        return parts;
+    public int getObtainedPoints() {
+        return obtainedPoints;
     }
 
-    public void setParts(ArrayList<SubjectPart> parts) {
-        this.parts = parts;
+    public void setObtainedPoints(int obtainedPoints) {
+        this.obtainedPoints = obtainedPoints;
     }
-    public void addParts(SubjectPart part) {this.parts.add(part); }
 
     public ArrayList<Student> getStudents() {
         return students;

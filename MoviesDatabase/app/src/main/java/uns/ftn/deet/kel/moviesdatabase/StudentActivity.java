@@ -4,6 +4,7 @@ package uns.ftn.deet.kel.moviesdatabase;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -23,8 +24,9 @@ public class StudentActivity extends AppCompatActivity {
     TextView txtStudLastName;
     TextView txtIndex;
     TextView txtJmbg;
+    TextView txtObtainedPoints;
     Button btnBack;
-    Spinner spnSubjects;
+    Spinner spnStudSubjects;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,14 +36,12 @@ public class StudentActivity extends AppCompatActivity {
         txtStudLastName =  findViewById( R.id.txtAdminPass);
         txtIndex =  findViewById(R.id.txtIndex);
         txtJmbg =  findViewById(R.id.txtJmbg);
+        txtObtainedPoints = findViewById(R.id.txtObtainedPoints);
 
-        spnSubjects = (Spinner) findViewById(R.id.spnStudents);
         Intent receivedIntent = getIntent();
         String recUser = receivedIntent.getStringExtra("key_username");
         Toast.makeText(StudentActivity.this, "Cao, "+recUser, Toast.LENGTH_SHORT).show();
-        if(databaseHelper.findAdmin("admin","admin")){
-            Toast.makeText(StudentActivity.this, "Ima nesto", Toast.LENGTH_SHORT).show();
-        }
+
         int studID = databaseHelper.getStudentIDWithUserName(recUser);
         Student student = new Student();
         student = databaseHelper.getStudent(studID);
@@ -50,6 +50,28 @@ public class StudentActivity extends AppCompatActivity {
         txtIndex.setText(student.getIndex());
         txtJmbg.setText(student.getJmbg());
         loadSpinnerSubjects(student.getUserName());
+
+        spnStudSubjects = (Spinner) findViewById(R.id.spnStudSubjects);
+        spnStudSubjects.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                int studID = databaseHelper.getStudentIDWithUserName(recUser);
+                Student student = new Student();
+                student = databaseHelper.getStudent(studID);
+                String subjectNamez = spnStudSubjects.getSelectedItem().toString();
+                String subjectNameYear = "rerer 12323";
+                String[] str = subjectNameYear.split("\\s+");
+                String subjName = str[0];
+                String subjYear = str[1];
+                Toast.makeText(StudentActivity.this,subjName+ " "+subjYear, Toast.LENGTH_SHORT).show();
+                //int sID = databaseHelper.getSubjectIDWithNameAndYear(subjName,subjYear);
+                //Subject selectedSubject = databaseHelper.getSubject(sID);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Code to execute when nothing is selected
+            }
+        });
 
         btnBack = (Button) findViewById(R.id.btnBack);
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +97,6 @@ public class StudentActivity extends AppCompatActivity {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         // attaching data adapter to spinner
-        spnSubjects.setAdapter(dataAdapter);
+        spnStudSubjects.setAdapter(dataAdapter);
     }
 }

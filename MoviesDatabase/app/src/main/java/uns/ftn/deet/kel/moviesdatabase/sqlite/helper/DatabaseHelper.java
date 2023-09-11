@@ -114,7 +114,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + TABLE_STUDENTS_SUBJECTS +
             "(" + KEY_ID + " INTEGER PRIMARY KEY," +
             KEY_STUDENT_ID  + " INTEGER," +
-            KEY_SUBJECT_ID  + " INTEGER" +")";
+            KEY_SUBJECT_ID  + " INTEGER," +
+            KEY_OBTAINED_POINTS  + " INTEGER" +")";
     private static final String CREATE_TABLE_STUDENTS_PARTS= "CREATE TABLE IF NOT EXISTS "
             + TABLE_STUDENTS_PARTS +
             "(" + KEY_ID + " INTEGER PRIMARY KEY," +
@@ -282,6 +283,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return admins;
     }
+    /*
+     * getting Students with given username and password
+     * SELECT * FROM subjects;
+     * */
     public boolean findStudent(String un, String pass) {
         boolean student_found = false;
 
@@ -364,7 +369,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return subject_id;
     }
+    /*
+     * Find subject using name and year
+     */
+    public boolean findSubject(String name, String year) {
+        boolean subject_found = false;
 
+        ArrayList<Subject> subjects = new ArrayList<Subject>();
+        String selectQuery = "SELECT  * FROM " + TABLE_SUBJECTS;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+        String inputName;
+        String inputYear;
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Admin a = new Admin();
+                inputName = (c.getString(c.getColumnIndex(KEY_NAME)));
+                inputYear = (c.getString(c.getColumnIndex(KEY_YEAR)));
+                if(inputName.equals(name)  && inputYear.equals(year)){
+                    subject_found = true;
+                    break;
+                }
+            } while (c.moveToNext());
+        }
+        return subject_found;
+    }
+
+    public int getSubjectIDWithNameAndYear(String name, String year) {
+        int tempID = 500;
+        String selectQuery = "SELECT  * FROM " + TABLE_SUBJECTS;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+        String inputName;
+        String inputYear;
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                inputName = (c.getString(c.getColumnIndex(KEY_NAME)));
+                inputYear = (c.getString(c.getColumnIndex(KEY_YEAR)));
+                if(inputName.equals(name) && inputYear.equals(year)){
+                    tempID = c.getInt(c.getColumnIndex(KEY_ID));
+                    break;
+                }
+            } while (c.moveToNext());
+        }
+        return tempID;
+    }
     public long createPart(SubjectPart part) {
 
         ContentValues values = new ContentValues();
@@ -386,6 +441,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put(KEY_STUDENT_ID, student.getId());
             values.put(KEY_SUBJECT_ID, subject.getId());
+            values.put(KEY_OBTAINED_POINTS, 0);
             // insert row
             db.insert(TABLE_STUDENTS_SUBJECTS, null, values);
         }
@@ -575,6 +631,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return subjects;
+    }
+
+    //SELECT s.id, c.name FROM studen s, subjec c, stuce_subjec sc WHERE c.name LIKE ‘Razv%’ AND c.id = sc.subje_id AND s.id = sc.student_id
+
+    public int getObtainedPoints(int studID, int subjID) {
+        int obtainedPoints = 5000000;
+
+        //String selectQuery = "SELECT  * FROM " + TABLE_STUDENTS_SUBJECTS;
+        String selectQuery = "SELECT  sc." + KEY_OBTAINED_POINTS + " FROM " + TABLE_STUDENTS_SUBJECTS + " sc " +
+                "WHERE sc." + KEY_STUDENT_ID + " = " + studID + "AND sc." + KEY_SUBJECT_ID + " = " + subjID;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                obtainedPoints = c.getInt(c.getColumnIndex(KEY_OBTAINED_POINTS));
+            } while (c.moveToNext());
+            return obtainedPoints;
+        }
+
+        return obtainedPoints;
     }
     /**********************************************************************************************/
     /*

@@ -37,19 +37,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="JMBG"
-            android:layout_marginBottom="34dp"/>/>
+            android:layout_marginBottom="34dp"/>
 
 
         <Spinner
-            android:id="@+id/spnStudents"
+            android:id="@+id/spnStudSubjects"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="34dp"/>
+
+        <TextView
+            android:id="@+id/txtObtainedPoints"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Obtained points"
             android:layout_marginBottom="34dp"/>
 
         <Button
             android:id="@+id/btnBack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Back to loigin" />/>
+            android:text="Back to loigin" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
