@@ -488,6 +488,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /*
+     * Updating an Actor using data in an object actor
+     */
+    public int updateObtainedPoints(int studID, int subjID, int obtPoints) {
+        ContentValues values = new ContentValues();
+        values.put(KEY_OBTAINED_POINTS, obtPoints);
+
+        // Properly format the WHERE clause with spaces
+        String whereClause = KEY_STUDENT_ID + " = ? AND " + KEY_SUBJECT_ID + " = ?";
+
+        // Provide the values for the placeholders in the WHERE clause
+        String[] whereArgs = { String.valueOf(studID), String.valueOf(subjID) };
+
+        // Update the row
+        return db.update(TABLE_STUDENTS_SUBJECTS, values, whereClause, whereArgs);
+    }
+
+    /*
      * Deleting an Student using actor id
      */
     public void deleteStudent(long student_id) {
@@ -640,7 +657,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //String selectQuery = "SELECT  * FROM " + TABLE_STUDENTS_SUBJECTS;
         String selectQuery = "SELECT  sc." + KEY_OBTAINED_POINTS + " FROM " + TABLE_STUDENTS_SUBJECTS + " sc " +
-                "WHERE sc." + KEY_STUDENT_ID + " = " + studID + "AND sc." + KEY_SUBJECT_ID + " = " + subjID;
+                "WHERE sc." + KEY_STUDENT_ID + " = " + studID + " AND sc." + KEY_SUBJECT_ID + " = " + subjID;
 
         Log.e(LOG, selectQuery);
 

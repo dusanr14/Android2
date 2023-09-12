@@ -27,6 +27,7 @@ public class StudentActivity extends AppCompatActivity {
     TextView txtObtainedPoints;
     Button btnBack;
     Spinner spnStudSubjects;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +38,7 @@ public class StudentActivity extends AppCompatActivity {
         txtIndex =  findViewById(R.id.txtIndex);
         txtJmbg =  findViewById(R.id.txtJmbg);
         txtObtainedPoints = findViewById(R.id.txtObtainedPoints);
-
+        spnStudSubjects = findViewById(R.id.spnStudSubjects);
         Intent receivedIntent = getIntent();
         String recUser = receivedIntent.getStringExtra("key_username");
         Toast.makeText(StudentActivity.this, "Cao, "+recUser, Toast.LENGTH_SHORT).show();
@@ -51,22 +52,22 @@ public class StudentActivity extends AppCompatActivity {
         txtJmbg.setText(student.getJmbg());
         loadSpinnerSubjects(student.getUserName());
 
-        spnStudSubjects = (Spinner) findViewById(R.id.spnStudSubjects);
         spnStudSubjects.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                int studID = databaseHelper.getStudentIDWithUserName(recUser);
-                Student student = new Student();
-                student = databaseHelper.getStudent(studID);
-                String subjectNamez = spnStudSubjects.getSelectedItem().toString();
-                String subjectNameYear = "rerer 12323";
-                String[] str = subjectNameYear.split("\\s+");
+                String selectedSubject = spnStudSubjects.getSelectedItem().toString();
+
+                String[] str = selectedSubject.split("\\s+");
+                Toast.makeText(StudentActivity.this, selectedSubject, Toast.LENGTH_SHORT).show();
                 String subjName = str[0];
                 String subjYear = str[1];
-                Toast.makeText(StudentActivity.this,subjName+ " "+subjYear, Toast.LENGTH_SHORT).show();
-                //int sID = databaseHelper.getSubjectIDWithNameAndYear(subjName,subjYear);
-                //Subject selectedSubject = databaseHelper.getSubject(sID);
+                txtObtainedPoints.setText(subjName + " " + subjYear);
+                int subID = databaseHelper.getSubjectIDWithNameAndYear(subjName,subjYear);
+                int stdID = databaseHelper.getStudentIDWithUserName(recUser);
+                int obtainedPoints = databaseHelper.getObtainedPoints(stdID,subID);
+                txtObtainedPoints.setText(Integer.toString(obtainedPoints));
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
                 // Code to execute when nothing is selected
@@ -85,11 +86,10 @@ public class StudentActivity extends AppCompatActivity {
     }
 
     void loadSpinnerSubjects (String userName){
-        ArrayList<Subject> subjects = new ArrayList<>();
         ArrayList<String> subjectsNames = new ArrayList<>();
-        subjects = databaseHelper.getAllSubjectsOfStudent(userName);
+        ArrayList<Subject> subjects = databaseHelper.getAllSubjectsOfStudent(userName);
         for(Subject s: subjects){
-            subjectsNames.add(s.getName());
+            subjectsNames.add(s.getName()+" "+s.getYear());
         }
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, subjectsNames);
 

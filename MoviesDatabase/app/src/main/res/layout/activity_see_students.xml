@@ -55,12 +55,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="34dp"/>
+
         <TextView
-            android:id="@+id/txtInfoStudSubj"
+            android:id="@+id/txtObtainedPontsGrade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add selected subject to selected student"
+            android:text="Broj bodova: "
             android:layout_marginBottom="34dp"/>
+
+        <EditText
+            android:id="@+id/txtUpdatePoints"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Azuriraj broj bodova"
+            android:layout_marginBottom="34dp"/>
+
+        <Button
+            android:id="@+id/btnUpdatePoints"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Update points" />
 
         <Spinner
             android:id="@+id/spnAddSubjects"
