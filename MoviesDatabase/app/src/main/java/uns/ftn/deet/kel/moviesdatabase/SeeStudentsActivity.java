@@ -63,7 +63,10 @@ public class SeeStudentsActivity extends AppCompatActivity {
                 txtIndex.setText(stud.getIndex());
                 txtJmbg.setText(stud.getJmbg());
                 loadSpinnerSubjects(stud.getUserName());
-                updatePointsAndGrade();
+                if(spnSubjects.getSelectedItem() != null)
+                    updatePointsAndGrade();
+                else
+                    txtObtainedPontsGrade.setText(" ");
             }
 
             @Override
@@ -92,7 +95,10 @@ public class SeeStudentsActivity extends AppCompatActivity {
         spnSubjects.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(spnSubjects.getSelectedItem() != null)
                 updatePointsAndGrade();
+                else
+                    txtObtainedPontsGrade.setText(" ");
             }
 
             @Override
@@ -146,27 +152,28 @@ public class SeeStudentsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String selectedSubject = spnSubjects.getSelectedItem().toString();
+                if(spnSubjects.getSelectedItem() != null) {
+                    String[] str = selectedSubject.split("\\s+");
+                    //Toast.makeText(SeeStudentsActivity.this, selectedSubject, Toast.LENGTH_SHORT).show();
+                    String subjName = str[0];
+                    String subjYear = str[1];
+                    String studUs = spnStudents.getSelectedItem().toString();
 
-                String[] str = selectedSubject.split("\\s+");
-                //Toast.makeText(SeeStudentsActivity.this, selectedSubject, Toast.LENGTH_SHORT).show();
-                String subjName = str[0];
-                String subjYear = str[1];
-                String studUs = spnStudents.getSelectedItem().toString();
+                    int subID = databaseHelper.getSubjectIDWithNameAndYear(subjName, subjYear);
+                    int stdID = databaseHelper.getStudentIDWithUserName(studUs);
 
-                int subID = databaseHelper.getSubjectIDWithNameAndYear(subjName,subjYear);
-                int stdID = databaseHelper.getStudentIDWithUserName(studUs);
+                    String obtainedPointsString = txtUpdatePoints.getText().toString();
 
-                String obtainedPointsString = txtUpdatePoints.getText().toString();
-
-                int obtainedPoints = 0;
-                Toast.makeText(SeeStudentsActivity.this,"Obrained poins: "+ obtainedPointsString, Toast.LENGTH_SHORT).show();
-                try {
-                    obtainedPoints = Integer.parseInt(obtainedPointsString);
-                } catch (NumberFormatException e) {
-                    Toast.makeText(SeeStudentsActivity.this, "Nije validan unos ", Toast.LENGTH_SHORT).show();
+                    int obtainedPoints = 0;
+                    Toast.makeText(SeeStudentsActivity.this, "Obrained poins: " + obtainedPointsString, Toast.LENGTH_SHORT).show();
+                    try {
+                        obtainedPoints = Integer.parseInt(obtainedPointsString);
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(SeeStudentsActivity.this, "Nije validan unos ", Toast.LENGTH_SHORT).show();
+                    }
+                    databaseHelper.updateObtainedPoints(stdID, subID, obtainedPoints);
+                    updatePointsAndGrade();
                 }
-                databaseHelper.updateObtainedPoints(stdID, subID, obtainedPoints);
-                updatePointsAndGrade();
             }
         });
     }
@@ -174,31 +181,37 @@ public class SeeStudentsActivity extends AppCompatActivity {
     void loadSpinnerAddSubjects (){
         ArrayList<String> subjectsNames = new ArrayList<>();
         ArrayList<Subject> subjects = databaseHelper.getAllSubjects();
-        for(Subject s: subjects){
-            subjectsNames.add(s.getName()+" "+s.getYear());
+        if(subjects.size() != 0) {
+            for (Subject s : subjects) {
+                subjectsNames.add(s.getName() + " " + s.getYear());
+            }
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, subjectsNames);
+
+            // Drop down layout style - list view with radio button
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            // attaching data adapter to spinner
+            spnAddSubjects.setAdapter(dataAdapter);
         }
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, subjectsNames);
-
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        spnAddSubjects.setAdapter(dataAdapter);
     }
     void loadSpinnerSubjects (String userName){
         ArrayList<Subject> subjects = new ArrayList<>();
         ArrayList<String> subjectsNames = new ArrayList<>();
         subjects = databaseHelper.getAllSubjectsOfStudent(userName);
-        for(Subject s: subjects){
-            subjectsNames.add(s.getName()+" "+s.getYear());
+        if(subjects.size() != 0) {
+            for (Subject s : subjects) {
+                subjectsNames.add(s.getName() + " " + s.getYear());
+            }
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, subjectsNames);
+
+            // Drop down layout style - list view with radio button
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            // attaching data adapter to spinner
+            spnSubjects.setAdapter(dataAdapter);
+        } else {
+            spnSubjects.setAdapter(null);
         }
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, subjectsNames);
-
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        spnSubjects.setAdapter(dataAdapter);
     }
 
     void loadSpinnerStudents(ArrayList<Student> st) {

@@ -55,17 +55,21 @@ public class StudentActivity extends AppCompatActivity {
         spnStudSubjects.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String selectedSubject = spnStudSubjects.getSelectedItem().toString();
 
-                String[] str = selectedSubject.split("\\s+");
-                Toast.makeText(StudentActivity.this, selectedSubject, Toast.LENGTH_SHORT).show();
-                String subjName = str[0];
-                String subjYear = str[1];
-                txtObtainedPoints.setText(subjName + " " + subjYear);
-                int subID = databaseHelper.getSubjectIDWithNameAndYear(subjName,subjYear);
-                int stdID = databaseHelper.getStudentIDWithUserName(recUser);
-                int obtainedPoints = databaseHelper.getObtainedPoints(stdID,subID);
-                txtObtainedPoints.setText(Integer.toString(obtainedPoints));
+                if (spnStudSubjects.getSelectedItem() != null) {
+                    String selectedSubject = spnStudSubjects.getSelectedItem().toString();
+
+                    String[] str = selectedSubject.split("\\s+");
+                    Toast.makeText(StudentActivity.this, selectedSubject, Toast.LENGTH_SHORT).show();
+                    String subjName = str[0];
+                    String subjYear = str[1];
+                    txtObtainedPoints.setText(subjName + " " + subjYear);
+                    int subID = databaseHelper.getSubjectIDWithNameAndYear(subjName, subjYear);
+                    int stdID = databaseHelper.getStudentIDWithUserName(recUser);
+                    int obtainedPoints = databaseHelper.getObtainedPoints(stdID, subID);
+                    int grade = calculateGrade(obtainedPoints);
+                    txtObtainedPoints.setText("Broj bodova: " + obtainedPoints + " Ocena: " + grade);
+                }
             }
 
             @Override
@@ -88,15 +92,35 @@ public class StudentActivity extends AppCompatActivity {
     void loadSpinnerSubjects (String userName){
         ArrayList<String> subjectsNames = new ArrayList<>();
         ArrayList<Subject> subjects = databaseHelper.getAllSubjectsOfStudent(userName);
-        for(Subject s: subjects){
-            subjectsNames.add(s.getName()+" "+s.getYear());
+        if(subjects.size() != 0) {
+            for (Subject s : subjects) {
+                subjectsNames.add(s.getName() + " " + s.getYear());
+            }
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, subjectsNames);
+
+            // Drop down layout style - list view with radio button
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            // attaching data adapter to spinner
+            spnStudSubjects.setAdapter(dataAdapter);
         }
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, subjectsNames);
+    }
 
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        spnStudSubjects.setAdapter(dataAdapter);
+    int calculateGrade(int points){
+        int grade = 5;
+        if(points >50 && points <= 60){
+            grade = 6;
+        } else if(points >60 && points <= 70) {
+            grade = 7;
+        } else if(points >70 && points <= 80) {
+            grade = 8;
+        } else if(points >80 && points <= 90) {
+            grade = 9;
+        } else if(points >90 && points <= 100) {
+            grade = 10;
+        } else{
+            grade = 5;
+        }
+        return grade;
     }
 }
