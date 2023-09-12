@@ -7,9 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +16,7 @@ import java.util.List;
 
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Admin;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Student;
-import uns.ftn.deet.kel.moviesdatabase.sqlite.model.SubjectActivity;
+import uns.ftn.deet.kel.moviesdatabase.sqlite.SubjectActivity;
 
 public class AdminActivity extends AppCompatActivity {
 
@@ -30,11 +28,10 @@ public class AdminActivity extends AppCompatActivity {
     TextView txtStudIndex;
     Button btnAddAdmin;
     Button btnAddStudent;
-    Spinner spnStudents;
     Button btnBackToMain;
     Button btnSubjects;
     Button btnSeeStudents;
-
+    Button btnSearch;
     //@SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +45,6 @@ public class AdminActivity extends AppCompatActivity {
         txtStudLastName = (TextView) findViewById(R.id.txtStudLastName);
         txtStudJMBG = (TextView) findViewById(R.id.txtStudJMBG);
         txtStudIndex = (TextView) findViewById(R.id.txtStudIndex);
-
-        spnStudents = (Spinner) findViewById(R.id.spnStudSubjects);
 
         boolean admin = databaseHelper.findAdmin("admin", "admin");
         btnAddAdmin = (Button) findViewById(R.id.btnAddAdmin);
@@ -94,7 +89,6 @@ public class AdminActivity extends AppCompatActivity {
                     Toast.makeText(AdminActivity.this, "Neispravan unos JMBG-a, ili username zauzet", Toast.LENGTH_SHORT).show();
                 }
                 List<Student> ld = databaseHelper.getAllStudents();
-                loadSpinnerStudents((ArrayList<Student>) ld);
 
             }
         });
@@ -116,6 +110,7 @@ public class AdminActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         btnSeeStudents = (Button) findViewById(R.id.btnSeeStudents);
         btnSeeStudents.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,24 +119,16 @@ public class AdminActivity extends AppCompatActivity {
                 startActivity(intenta);
             }
         });
+
+        btnSearch = (Button) findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AdminActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
         List<Student> ld = databaseHelper.getAllStudents();
-        loadSpinnerStudents((ArrayList<Student>) ld);
-    }
-
-    void loadSpinnerStudents(ArrayList<Student> st) {
-        ArrayList<String> studentnames = new ArrayList<>();
-        for (Student student : st) {
-            studentnames.add(student.getName());
-        }
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, studentnames);
-
-        // Drop down layout
-        // style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        spnStudents.setAdapter(dataAdapter);
     }
 
     public void addAdmin() {

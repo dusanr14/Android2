@@ -595,15 +595,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * SELECT a.id, m.name FROM actors a, movies m, movie_actors ma WHERE m.name LIKE ‘Pulp%’ AND m.id = ma.movie_id AND a.id = ma.actor_id;
      * SELECT s.id, c.name FROM studen s, subjec c, stuce_subjec sc WHERE c.name LIKE ‘Razv%’ AND c.id = sc.subje_id AND s.id = sc.student_id
      * */
-    public List<Student> getAllStudentsInSubject(String subjectName) {
+    public List<Student> getAllStudentsInSubject(int subjectId) {
         List<Student> students = new ArrayList<Student>();
 
         String selectQuery = "SELECT  st." + KEY_ID + ", sb." + KEY_NAME + " FROM " + TABLE_STUDENTS + " st, "
                 + TABLE_SUBJECTS + " sb, " + TABLE_STUDENTS_SUBJECTS + " sc " +
-                "WHERE UPPER(sb." + KEY_NAME + ") " +
-                "LIKE '" + subjectName.toUpperCase() + "%'" +
-                "AND sb." + KEY_ID + " = " + "sc." + KEY_SUBJECT_ID + " " +
-                "AND st." + KEY_ID + " = " + "sc." + KEY_STUDENT_ID;
+                "WHERE sb." + KEY_ID +
+                " = " + subjectId +
+                " AND sb." + KEY_ID + " = " + "sc." + KEY_SUBJECT_ID + " " +
+                " AND st." + KEY_ID + " = " + "sc." + KEY_STUDENT_ID;
 
         Log.e(LOG, selectQuery);
 

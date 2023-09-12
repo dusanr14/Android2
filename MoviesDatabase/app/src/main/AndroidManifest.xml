@@ -9,7 +9,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MoviesDatabase">
         <activity
-            android:name=".sqlite.model.SubjectActivity"
+            android:name=".SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".sqlite.SubjectActivity"
             android:exported="false" />
         <activity
             android:name=".SeeStudentsActivity"

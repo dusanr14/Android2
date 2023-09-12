@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Spinner
+            android:id="@+id/spnAllStudents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="68dp" />
+
+        <Spinner
+            android:id="@+id/spnAllSubjects"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="68dp" />
+
+        <EditText
+            android:id="@+id/txtGrade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:text="Grade" />
+
+        <Button
+            android:id="@+id/btnStudentSubject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Student Subject" />
+
+        <Button
+            android:id="@+id/btnStudentSubjectPassed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Student passed chosed Subject" />
+
+        <Button
+            android:id="@+id/btnStudentSubjectGrade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Students Passed chosen Subject with grade" />
+
+        <Button
+            android:id="@+id/btnSubjectsStudentPassed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="All passed Subjects of chosen Student" />
+
+        <Spinner
+            android:id="@+id/spnAnswer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="68dp" />
+
+        <Button
+            android:id="@+id/btnBackToAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package uns.ftn.deet.kel.moviesdatabase.sqlite.model;
+package uns.ftn.deet.kel.moviesdatabase.sqlite;
 
 import static uns.ftn.deet.kel.moviesdatabase.MainActivity.databaseHelper;
 
@@ -15,9 +15,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import uns.ftn.deet.kel.moviesdatabase.AdminActivity;
-import uns.ftn.deet.kel.moviesdatabase.MainActivity;
 import uns.ftn.deet.kel.moviesdatabase.R;
-import uns.ftn.deet.kel.moviesdatabase.SeeStudentsActivity;
+import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Subject;
 
 public class SubjectActivity extends AppCompatActivity {
 
