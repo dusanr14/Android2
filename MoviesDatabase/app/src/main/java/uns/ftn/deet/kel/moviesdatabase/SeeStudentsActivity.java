@@ -151,8 +151,9 @@ public class SeeStudentsActivity extends AppCompatActivity {
         btnUpdatePoints.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String selectedSubject = spnSubjects.getSelectedItem().toString();
                 if(spnSubjects.getSelectedItem() != null) {
+                    String selectedSubject = spnSubjects.getSelectedItem().toString();
+
                     String[] str = selectedSubject.split("\\s+");
                     //Toast.makeText(SeeStudentsActivity.this, selectedSubject, Toast.LENGTH_SHORT).show();
                     String subjName = str[0];
@@ -251,16 +252,19 @@ public class SeeStudentsActivity extends AppCompatActivity {
     void updatePointsAndGrade(){
         String selectedSubject = spnSubjects.getSelectedItem().toString();
 
-        String[] str = selectedSubject.split("\\s+");
-        //Toast.makeText(SeeStudentsActivity.this, selectedSubject, Toast.LENGTH_SHORT).show();
-        String subjName = str[0];
-        String subjYear = str[1];
-        String studUs = spnStudents.getSelectedItem().toString();
-        int subID = databaseHelper.getSubjectIDWithNameAndYear(subjName,subjYear);
-        int stdID = databaseHelper.getStudentIDWithUserName(studUs);
-        int obtainedPoints = databaseHelper.getObtainedPoints(stdID,subID);
+        if(selectedSubject != null) {
+            String[] str = selectedSubject.split("\\s+");
+            String subjName = str[0];
+            String subjYear = str[1];
+            String studUs = spnStudents.getSelectedItem().toString();
+            int subID = databaseHelper.getSubjectIDWithNameAndYear(subjName, subjYear);
+            int stdID = databaseHelper.getStudentIDWithUserName(studUs);
+            int obtainedPoints = databaseHelper.getObtainedPoints(stdID, subID);
 
-        int grade = calculateGrade(obtainedPoints);
-        txtObtainedPontsGrade.setText("Osvojeo bodova: "+Integer.toString(obtainedPoints)+" Ocena: "+Integer.toString(grade));
+            int grade = calculateGrade(obtainedPoints);
+            txtObtainedPontsGrade.setText("Osvojeo bodova: " + Integer.toString(obtainedPoints) + " Ocena: " + Integer.toString(grade));
+        } else {
+            Toast.makeText(SeeStudentsActivity.this, "Student ne pohadja ni jedan predmet", Toast.LENGTH_SHORT).show();
+        }
     }
 }
