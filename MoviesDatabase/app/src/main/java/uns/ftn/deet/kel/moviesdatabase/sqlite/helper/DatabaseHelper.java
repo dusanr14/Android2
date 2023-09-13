@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uns.ftn.deet.kel.moviesdatabase.MainActivity;
-import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Actor;
-import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Director;
-import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Movie;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Admin;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Student;
 import uns.ftn.deet.kel.moviesdatabase.sqlite.model.Subject;
@@ -65,13 +62,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_STUDENT_ID = "student_id";
     private static final String KEY_PART_ID = "part_id";
     private static final String KEY_SUBJECT_ID = "subject_id";
-    // MOVIES Table - column names
-    private static final String KEY_DIRECTOR_ID = "director_id";
-    private static final String KEY_RELEASEDATE = "release_date";
-
-    //MOVIE_ACTORS Table - column names
-    private static final String KEY_MOVIE_ID = "movie_id";
-    private static final String KEY_ACTOR_ID = "actor_id";
 
     // Table Create Statements
     // Students table create statement
@@ -179,7 +169,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // insert row
         long admin_id = db.insert(TABLE_ADMINS, null, values);
 
-        //now we know id obtained after writing actor to a database, update existing actor
+        //now we know id obtained after writing admin to a database, update existing admin
         admin.setId(admin_id);
 
         return admin_id;
@@ -304,7 +294,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // insert row
         long student_id = db.insert(TABLE_STUDENTS, null, values);
 
-        //now we know id obtained after writing actor to a database, update existing actor
+        //now we know id obtained after writing student to a database, update existing student
         student.setId(student_id);
 
         return student_id;
@@ -318,7 +308,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // insert row
         long subject_id = db.insert(TABLE_SUBJECTS, null, values);
 
-        //now we know id obtained after writing actor to a database, update existing actor
+        //now we know id obtained after writing subject to a database, update existing subject
         subject.setId(subject_id);
 
         return subject_id;
@@ -383,14 +373,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // insert row
         long subject_id = db.insert(TABLE_PARTS, null, values);
 
-        //now we know id obtained after writing actor to a database, update existing actor
+        //now we know id obtained after writing part to a database, update existing part
         part.setId(subject_id);
 
         return subject_id;
     }
 
     public void addStudentsInSubject(Subject subject) {
-        //read all actors for a given movie and for each actor insert a row in a table movie_actors
         for (Student student : subject.getStudents()){
             ContentValues values = new ContentValues();
             values.put(KEY_STUDENT_ID, student.getId());
@@ -425,7 +414,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return st;
     }
     /*
-     * Updating an Actor using data in an object actor
+     * Updating an Student using data in an object student
      */
     public int updateStudent(Student student) {
 
@@ -442,7 +431,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /*
-     * Updating an Actor using data in an object actor
+     * Updating an Points using data
      */
     public int updateObtainedPoints(int studID, int subjID, int obtPoints) {
         ContentValues values = new ContentValues();
@@ -467,7 +456,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /*
-     * Deleting an Student using actor id
+     * Deleting an Student using student id
      */
     public void deleteStudent(long student_id) {
 
@@ -556,7 +545,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /*
      * getting all students attending a subject
-     * SELECT a.id, m.name FROM actors a, movies m, movie_actors ma WHERE m.name LIKE ‘Pulp%’ AND m.id = ma.movie_id AND a.id = ma.actor_id;
      * SELECT s.id, c.name FROM studen s, subjec c, stuce_subjec sc WHERE c.name LIKE ‘Razv%’ AND c.id = sc.subje_id AND s.id = sc.student_id
      * */
     public List<Student> getAllStudentsInSubject(int subjectId) {

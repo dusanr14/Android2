@@ -63,7 +63,6 @@ public class SubjectActivity extends AppCompatActivity {
                     Toast.makeText(SubjectActivity.this, "Neuspesno. Vec postoji predmet ili pogresan format godine. ", Toast.LENGTH_SHORT).show();
                 }
 
-
             }
         });
 
