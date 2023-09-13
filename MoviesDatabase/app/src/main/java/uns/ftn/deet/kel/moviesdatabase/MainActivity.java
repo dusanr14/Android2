@@ -32,9 +32,7 @@ public class MainActivity extends AppCompatActivity {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     Spinner spnActors;
     Spinner spnDirectors;
-    Spinner spnMovies;
     Button btnDeleteDatabase;
-    Button btnFindActors;
     Button btnRestoreDatabase;
     Button btnExit;
     @Override
@@ -73,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
         spnActors = (Spinner) findViewById(R.id.spnActors);
         spnDirectors = (Spinner) findViewById(R.id.spnDirectors);
-        spnMovies = (Spinner) findViewById(R.id.spnMovies);
 
         btnDeleteDatabase = (Button) findViewById(R.id.btnDeleteDatabase);
         btnDeleteDatabase.setOnClickListener(new View.OnClickListener() {
@@ -83,20 +80,8 @@ public class MainActivity extends AppCompatActivity {
                     databaseHelper.dropTables();
                     loadSpinnerDataActors(new ArrayList<Admin>());
                     loadSpinnerStudents(new ArrayList<>());
-                    loadSpinnerDataMovies(new ArrayList<>());
                 }
 
-            }
-        });
-
-        btnFindActors = (Button) findViewById(R.id.btnActorsInMovie);
-        btnFindActors.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (spnMovies.getSelectedItem() != null) {
-                    List<Admin> adm = databaseHelper.getAllAdmins();
-                    loadSpinnerDataActors((ArrayList<Admin>) adm);
-                }
             }
         });
 
@@ -125,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     void createTablesAndInitData(){
         databaseHelper.createTables();
 
-        if (databaseHelper.getAllActors().size() == 0) {
+        if (databaseHelper.getAllStudents().size() == 0) {
 
             Admin admin1 = new Admin("admin","admin");
             Admin admin2 = new Admin("admo","admii");
@@ -222,8 +207,6 @@ public class MainActivity extends AppCompatActivity {
         loadSpinnerDataActors((ArrayList<Admin>) ad);
         List<Student> ld = databaseHelper.getAllStudents();
         loadSpinnerStudents((ArrayList<Student>) ld);
-        List<Movie> mv = databaseHelper.getAllMovies();
-        loadSpinnerDataMovies((ArrayList<Movie>) mv);
 
     }
     void loadSpinnerDataActors (ArrayList<Admin> ad){
@@ -254,21 +237,6 @@ public class MainActivity extends AppCompatActivity {
 
         // attaching data adapter to spinner
         spnDirectors.setAdapter(dataAdapter);
-    }
-
-    void loadSpinnerDataMovies (ArrayList<Movie> al){
-        ArrayList<String> movienames = new ArrayList<>();
-        for (Movie movie : al){
-            movienames.add(movie.getName());
-        }
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, movienames);
-
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        spnMovies.setAdapter(dataAdapter);
     }
 
 

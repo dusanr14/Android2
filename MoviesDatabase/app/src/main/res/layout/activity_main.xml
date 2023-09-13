@@ -45,12 +45,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="68dp" />
 
-        <Spinner
-            android:id="@+id/spnMovies"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="68dp" />
-
         <Button
             android:id="@+id/btnDeleteDatabase"
             android:layout_width="wrap_content"
@@ -58,14 +52,6 @@
             android:layout_gravity="center"
             android:layout_marginBottom="68dp"
             android:text="Clear Database" />
-
-        <Button
-            android:id="@+id/btnActorsInMovie"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="68dp"
-            android:text="Find Actors" />
 
         <Button
             android:id="@+id/btnRestoreDatabase"
