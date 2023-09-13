@@ -492,7 +492,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public int updateObtainedPoints(int studID, int subjID, int obtPoints) {
         ContentValues values = new ContentValues();
-        values.put(KEY_OBTAINED_POINTS, obtPoints);
+        int obtainedPoints = 0;
+        if(obtPoints > 100){
+            obtainedPoints = 100;
+        } else if (obtPoints < 0) {
+            obtainedPoints = 0;
+        } else {
+            obtainedPoints = obtPoints;
+        }
+        values.put(KEY_OBTAINED_POINTS, obtainedPoints);
 
         // Properly format the WHERE clause with spaces
         String whereClause = KEY_STUDENT_ID + " = ? AND " + KEY_SUBJECT_ID + " = ?";
@@ -510,6 +518,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteStudent(long student_id) {
 
         db.delete(TABLE_STUDENTS, KEY_ID + " = ?",
+                new String[] { String.valueOf(student_id) });
+        db.delete(TABLE_STUDENTS_SUBJECTS, KEY_STUDENT_ID + " = ?",
                 new String[] { String.valueOf(student_id) });
     }
 

@@ -52,6 +52,18 @@
             android:layout_height="wrap_content"
             android:text="All passed Subjects of chosen Student" />
 
+        <Button
+            android:id="@+id/btnSubjectsStudentNotPassed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="All not passed Subjects of chosen Student" />
+
+        <Button
+            android:id="@+id/btnDeleteSelectedStudent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete selected student" />
+
         <Spinner
             android:id="@+id/spnAnswer"
             android:layout_width="match_parent"

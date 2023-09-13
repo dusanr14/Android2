@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ public class SearchActivity extends AppCompatActivity {
     Button btnStudentSubjectPassed;
     Button btnStudentSubjectGrade;
     Button btnSubjectsStudentPassed;
+    Button btnSubjectsStudentNotPassed;
+    Button btnDeleteSelectedStudent;
     Spinner spnAnswer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,11 @@ public class SearchActivity extends AppCompatActivity {
 
                 List<Student> studentList = databaseHelper.getAllStudentsInSubject(subjID);
                 ArrayList<Student> students = ((ArrayList<Student>)studentList);
+
+                if(students.size() == 0){
+                    spnAnswer.setAdapter(null);
+                }
+
                 loadAnswerSpinnerWithStudents(students);
             }
         });
@@ -84,17 +92,21 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 }
 
+                if(studentsPassed.size() == 0){
+                    spnAnswer.setAdapter(null);
+                }
                 loadAnswerSpinnerWithStudents(studentsPassed);
             }
         });
 
-        // Pretrazi sve studente koji su polozili predmet sa unetom ocenom
+        // Vrati sve studente koji su polozili predmet sa unetom ocenom
         btnStudentSubjectGrade = (Button) findViewById(R.id.btnStudentSubjectGrade);
         btnStudentSubjectGrade.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String subjectNameYear = spnAllSubjects.getSelectedItem().toString();
                 String[] str = subjectNameYear.split("\\s+");
+
                 String subjName = str[0];
                 String subjYear = str[1];
                 int subjID = databaseHelper.getSubjectIDWithNameAndYear(subjName,subjYear);
@@ -104,20 +116,30 @@ public class SearchActivity extends AppCompatActivity {
 
                 ArrayList<Student> studentsPassed = new ArrayList<Student>();
 
+                int inputGrade = 0;
+                try {
+                    inputGrade = Integer.parseInt(txtGrade.getText().toString());
+                } catch (NumberFormatException e) {
+                    Toast.makeText(SearchActivity.this, "Nije validan unos ocene", Toast.LENGTH_SHORT).show();
+                }
+
                 for(Student s: students){
                     int obtainedPoints = databaseHelper.getObtainedPoints((int)s.getId(),subjID);
                     int grade = calculateGrade(obtainedPoints);
 
-                    if( obtainedPoints > 50 && obtainedPoints < 101 && grade == Integer.parseInt(txtGrade.getText().toString())){
+                    if( obtainedPoints > 50 && obtainedPoints < 101 && grade == inputGrade){
                         studentsPassed.add(s);
                     }
                 }
 
+                if(studentsPassed.size() == 0){
+                    spnAnswer.setAdapter(null);
+                }
                 loadAnswerSpinnerWithStudents(studentsPassed);
             }
         });
 
-
+        // Vrati sve predmete koji je odabrani student polozio
         btnSubjectsStudentPassed = (Button) findViewById(R.id.btnSubjectsStudentPassed);
         btnSubjectsStudentPassed.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,10 +155,47 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 }
 
-                if(subjects.size() == 0){
+                if(passedSubjects.size() == 0){
                     spnAnswer.setAdapter(null);
                 }
             loadAnswerSpinnerWithSubjects(passedSubjects);
+            }
+        });
+
+        // Vrati sve predmete koji je odabrani student polozio
+        btnSubjectsStudentNotPassed = (Button) findViewById(R.id.btnSubjectsStudentNotPassed);
+        btnSubjectsStudentNotPassed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String studUserName = spnAllStudents.getSelectedItem().toString();
+                int studID = databaseHelper.getStudentIDWithUserName(studUserName);
+                ArrayList<Subject> subjects = databaseHelper.getAllSubjectsOfStudent(studUserName);
+                ArrayList<Subject> notPassedSubjects = new ArrayList<Subject>();
+                for (Subject s: subjects){
+                    int obtainedPoints = databaseHelper.getObtainedPoints(studID,(int)s.getId());
+                    if(obtainedPoints >= 0 && obtainedPoints <= 50){
+                        notPassedSubjects.add(s);
+                    }
+                }
+
+                if(subjects.size() == 0){
+                    spnAnswer.setAdapter(null);
+                }
+                loadAnswerSpinnerWithSubjects(notPassedSubjects);
+            }
+        });
+
+
+        btnDeleteSelectedStudent = (Button) findViewById(R.id.btnDeleteSelectedStudent);
+        btnDeleteSelectedStudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String studUserName = spnAllStudents.getSelectedItem().toString();
+                int studID = databaseHelper.getStudentIDWithUserName(studUserName);
+                Toast.makeText(SearchActivity.this, "Student "+ studUserName + " obrisan.", Toast.LENGTH_SHORT).show();
+                databaseHelper.deleteStudent(studID);
+                loadSpinnerAllStudents ();
+                loadSpinnerAllSubjects ();
             }
         });
 
@@ -183,7 +242,7 @@ public class SearchActivity extends AppCompatActivity {
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
             // attaching data adapter to spinner
-            spnAllSubjects .setAdapter(dataAdapter);
+            spnAllSubjects.setAdapter(dataAdapter);
         }
     }
 

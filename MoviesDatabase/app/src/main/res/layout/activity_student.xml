@@ -53,10 +53,41 @@
             android:text="Obtained points"
             android:layout_marginBottom="34dp"/>
 
+        <TextView
+            android:id="@+id/txtInfoYear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Input year format XXXX/XXXX: "
+            android:layout_marginBottom="34dp"/>
+
+        <EditText
+            android:id="@+id/txtInputYear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2000/2001"
+            android:layout_marginBottom="34dp"/>
+
+        <Button
+            android:id="@+id/btnPassedNotPassed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="See whitch subjcts are passed and not passed in selected year" />
+
+        <Spinner
+            android:id="@+id/spnPassedSubjects"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="34dp"/>
+
+        <Spinner
+            android:id="@+id/spnNotPassedSubjects"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="34dp"/>
         <Button
             android:id="@+id/btnBack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Back to loigin" />
+            android:text="Back to lgin" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
